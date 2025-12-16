@@ -1,0 +1,31 @@
+# ML4N - SSH Shell Attack Session Analysis
+# Project Requirements
+# 
+# Section 1: Data Exploration and Pre-processing
+# Minimal dependencies for Section 1 notebook
+
+# Data manipulation
+pandas>=1.3.0
+numpy>=1.21.0
+
+# Visualization
+matplotlib>=3.4.0
+seaborn>=0.11.0
+
+# Text processing and feature extraction
+scikit-learn>=1.0.0
+
+# File format support
+pyarrow>=6.0.0
+
+# Utilities (optional - add later if using word clouds in visualization)
+# wordcloud>=1.8.0
+
+# Section 2: Supervised Learning (Classification)
+# Uses scikit-learn, matplotlib, seaborn already listed above.
+# No additional packages required for Section 2.
+
+# Section 4: Language Models Exploration (Doc2Vec option)
+# Additional packages required for Doc2Vec and a simple dense classifier in PyTorch
+gensim>=4.3.0
+torch>=2.0.0
