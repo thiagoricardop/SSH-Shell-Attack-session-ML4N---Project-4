@@ -179,7 +179,7 @@ pip install pandas numpy pyarrow matplotlib seaborn scikit-learn
 
 - **Course:** Machine Learning for Networking (ML4N)
 - **Institution:** Politecnico di Torino (PoliTO)
-- **Group Members:** Donya Mohebi, Michele Valerio, Shahrokh Af, Thiago Ricardo
+- **Group Members:** Donya Mohebi, Michele Valerio, Sattar Aftabi, Thiago Ricardo
 - **Framework:** MITRE ATT&CK Tactics
 
 ## References
