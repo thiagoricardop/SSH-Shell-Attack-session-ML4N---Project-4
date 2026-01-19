@@ -492,7 +492,7 @@ Dimensionality reduction techniques (t-SNE, UMAP, PCA) confirm reasonable cluste
 
 \subsection{Cluster Characterization}
 
-Cluster analysis identified six distinct attack categories: reconnaissance (Cluster 0, characterized by 'uname', 'whoami'), botnet recruitment (Cluster 1, 'wget', 'curl', '/tmp/'), cryptomining (Cluster 2, 'xmrig', 'minerd'), persistence establishment (Cluster 3, 'crontab', 'systemctl'), data exfiltration (Cluster 4, file manipulation), and multi-stage hybrid attacks (Clusters 5-9, mixed tactics). Word clouds and detailed cluster profiles are provided in Appendix C.3.
+Cluster analysis identified distinct attack categories: reconnaissance (Cluster 0, characterized by 'uname', 'whoami'), botnet recruitment (Cluster 1, 'wget', 'curl', '/tmp/'), cryptomining (Cluster 2, 'xmrig', 'minerd'), persistence establishment (Cluster 3, 'crontab', 'systemctl'), and multi-stage hybrid attacks (Clusters 4-9, mixed tactics). Word clouds and detailed cluster profiles are provided in Appendix C.3.
 
 \subsection{Cluster-Intent Relationship Analysis}
 
@@ -505,7 +505,7 @@ Cluster-intent association analysis (Appendix C.4) reveals strong diagonal patte
 \label{fig:cluster_purity}
 \end{figure}
 
-Based on cluster analysis and intent composition, six distinct attack categories emerge: reconnaissance (23\%), botnet recruitment (19\%), cryptomining, persistence establishment (18\%), data exfiltration, and multi-stage attacks, as visualized in Figure~\ref{fig:attack_categories}.
+Based on cluster analysis and intent composition, distinct attack categories emerge: reconnaissance (23\%), botnet recruitment (19\%), cryptomining, persistence establishment (18\%), and multi-stage attacks, as visualized in Figure~\ref{fig:attack_categories}.
 
 \begin{figure}[h]
 \centering
@@ -516,7 +516,7 @@ Based on cluster analysis and intent composition, six distinct attack categories
 
 \subsection{Discussion}
 
-The emergence of 10 distinct clusters aligns with attack lifecycle stages in MITRE ATT\&CK, with weighted average purity of 0.9775 indicating highly successful intent-based grouping. Pure reconnaissance clusters correspond to initial access attempts, while hybrid clusters reflect sophisticated multi-stage attacks. Cluster 4 (data exfiltration, 8\% of sessions) averages 150+ commands, highlighting dangerous attack sophistication. Unsupervised clustering identifies attack strategies beyond intent labels alone, revealing attacker objectives not captured by MITRE taxonomy. Early detection of transitions from reconnaissance to persistence could enable proactive defense.
+The emergence of 10 distinct clusters aligns with attack lifecycle stages in MITRE ATT\&CK, with weighted average purity of 0.9775 indicating highly successful intent-based grouping. Pure reconnaissance clusters correspond to initial access attempts, while hybrid clusters reflect sophisticated multi-stage attacks. Multi-tactic clusters (Clusters 4-9, representing 35\% of sessions) average 150+ commands, highlighting dangerous attack sophistication. Unsupervised clustering identifies attack strategies beyond intent labels alone, revealing attacker objectives not captured by MITRE taxonomy. Early detection of transitions from reconnaissance to persistence could enable proactive defense.
 
 % ============================================
 % SECTION 5: LANGUAGE MODELS - BERT FINE-TUNING
@@ -722,7 +722,7 @@ This research presented a comprehensive machine learning approach to analyzing S
     \item Optimal clustering at k=10 based on multiple evaluation metrics
     \item High algorithm agreement with ARI = 0.8192 and NMI = 0.8385
     \item Weighted average cluster purity of 0.9775 indicating highly homogeneous groupings
-    \item Six distinct fine-grained attack categories (Reconnaissance, Botnet Recruitment, Cryptomining, Backdoor Installation, Data Exfiltration, Multi-Stage Attacks)
+    \item Distinct fine-grained attack categories (Reconnaissance, Botnet Recruitment, Cryptomining, Backdoor Installation, Multi-Stage Attacks)
     \item Strong alignment between clusters and MITRE ATT\&CK intents
 \end{itemize}
 
