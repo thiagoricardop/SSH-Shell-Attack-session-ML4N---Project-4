@@ -65,14 +65,20 @@ The dataset is stored in Parquet format and contains **230,000 attack sessions**
 
 ## Project Structure
 
-```
-├── 01_data_exploration.ipynb      # Section 1: Data exploration & preprocessing
-├── 02_classification.ipynb         # Section 2: Supervised classification
-├── 03_clustering.ipynb             # Section 3: Unsupervised clustering (planned)
-├── 04_language_models.ipynb        # Section 4: BERT/Doc2Vec models (planned)
-├── ssh_attacks.parquet             # Dataset file
-└── README.md                       # This file
-```
+SSH_Shell_Attack_Analysis
+├── docs/
+├── notebooks/
+│   ├── 01_data_exploration.ipynb     
+│   ├── 02_classification.ipynb       
+│   ├── 03_clustering.ipynb           
+│   ├── 04_language_models.ipynb      
+│   ├── requirements.txt              
+│   └── ssh_attacks.parquet           
+├── results/                           # Generated plots, metrics, and tables
+├── ML4N_SSH_Attack_Analysis.tex       # Main LaTeX source
+├── ML4N_SSH_Attack_Analysis.pdf       # Compiled report
+├── README.md                          
+└── .gitignore
 
 ## Project Sections
 
@@ -172,7 +178,7 @@ gensim        # For Doc2Vec
 
 ### Prerequisites
 ```bash
-pip install pandas numpy pyarrow matplotlib seaborn scikit-learn
+pip install pandas numpy pyarrow matplotlib seaborn scikit-learn transformers
 ```
 
 ## Academic Context

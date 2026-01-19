@@ -10,7 +10,10 @@
 %% Additional packages
 \usepackage{listings}
 \usepackage{subcaption}
-\usepackage{float}
+\usepackage{float}  
+\usepackage{placeins}
+\usepackage{hyperref}
+
 
 %% Code listing settings
 \lstset{
@@ -61,8 +64,12 @@
 %%
 %% Abstract
 %%
-\begin{abstract}
-This paper presents a comprehensive machine learning approach to analyze SSH shell attack sessions collected from honeypot systems. Using a dataset of 233,035 unique Unix shell attack sessions spanning from June 2019 to February 2020, we developed a multi-faceted methodology combining supervised learning, unsupervised clustering, and advanced language models to classify attacker tactics based on the MITRE ATT\&CK framework. The key contributions of this work include: (1) development of a robust preprocessing pipeline analyzing temporal trends, extracting numerical features, and evaluating intent distributions from large-scale SSH attack session data; (2) implementation of supervised classification models (Logistic Regression and SVM) with hyperparameter tuning achieving F1-scores above 0.96 for multi-label intent prediction; (3) application of unsupervised clustering techniques (K-Means with k=10 and Agglomerative Hierarchical Clustering) to uncover hidden patterns in attack behaviors with cluster purity scores exceeding 0.97; and (4) exploration of BERT-based language models fine-tuned for intent classification. Our analysis reveals that Discovery and Persistence are the dominant attack intents, often occurring together, while the BERT model achieves the highest classification accuracy with proper handling of class imbalance through weighted loss functions.
+\begin{abstract}    
+This paper presents a comprehensive machine learning approach to analyze SSH shell attack sessions collected from honeypot systems. Using a dataset of 233,035 unique Unix shell attack sessions spanning from June 2019 to February 2020, we developed a multi-faceted methodology combining supervised learning, unsupervised clustering, and advanced language models to classify attacker tactics based on the MITRE ATT\&CK framework. 
+
+The key contributions of this work include: (1) development of a robust preprocessing pipeline analyzing temporal trends, extracting numerical features, and evaluating intent distributions from large-scale SSH attack session data; (2) implementation of supervised classification models (Logistic Regression and SVM) with hyperparameter tuning achieving micro F1-scores above 0.99 and macro F1-scores of 0.846 for multi-label intent prediction; (3) application of unsupervised clustering techniques (K-Means with k=10 and Agglomerative Hierarchical Clustering) to uncover hidden patterns in attack behaviors with cluster purity scores of 97.75\%; and (4) comparative evaluation of BERT-based language models against traditional ML approaches for intent classification. 
+
+Our analysis reveals that Discovery and Persistence are the dominant attack intents, often occurring together, while extreme class imbalance remains the primary challenge limiting performance on rare intents. Traditional machine learning with carefully tuned Logistic Regression achieves superior overall performance compared to BERT, demonstrating that proper feature engineering and class weighting are more effective than architectural sophistication when discriminative lexical features exist.
 \end{abstract}
 
 %%
@@ -95,12 +102,18 @@ This paper presents a comprehensive machine learning approach to analyze SSH she
        <concept_desc>Computing methodologies~Neural networks</concept_desc>
        <concept_significance>300</concept_significance>
        </concept>
+    <concept>
+       <concept_id>10010147.10010257.10010258.10010259</concept_id>
+       <concept_desc>Computing methodologies~Unsupervised learning</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
  </ccs2012>
 \end{CCSXML}
 
 \ccsdesc[500]{Security and privacy~Intrusion detection systems}
 \ccsdesc[500]{Computing methodologies~Machine learning}
 \ccsdesc[300]{Computing methodologies~Neural networks}
+\ccsdesc[300]{Computing methodologies~Unsupervised learning}
 
 \maketitle
 
@@ -126,14 +139,16 @@ These challenges underscore the need for automated, intelligent approaches to lo
 \subsection{Objective}
 
 The primary objective of this research is to develop and evaluate machine learning techniques for automatic analysis and classification of SSH shell attack logs. Specifically, we aim to:
+
 \begin{itemize}
-    \item Automate the process of log analysis and multi-label intent classification
-    \item Provide security professionals with insights into attack strategies and temporal patterns
-    \item Identify clusters of similar attack behaviors for proactive threat mitigation
-    \item Evaluate the effectiveness of advanced language models (BERT) compared to traditional ML approaches
+    \item Automate multi-label intent classification using MITRE ATT\&CK framework
+    \item Compare traditional machine learning approaches with modern language models to identify optimal solutions for production deployment
+    \item Discover latent attack patterns through unsupervised clustering to reveal attacker strategies beyond labeled intents
+    \item Provide security professionals with actionable insights into attack behaviors, temporal patterns, and threat prioritization
+    \item Evaluate the impact of extreme class imbalance on model performance and identify effective mitigation strategies
 \end{itemize}
 
-The significance of this research lies in its potential to enhance cybersecurity threat detection and response capabilities by transforming complex, unstructured log data into actionable intelligence.
+The significance of this research lies in its potential to enhance cybersecurity threat detection and response capabilities by transforming complex, unstructured log data into actionable intelligence. By systematically comparing supervised classification, unsupervised pattern discovery, and advanced language models, this work provides practical guidance for deploying ML-powered log analysis systems in real-world security operations.
 
 \subsection{MITRE ATT\&CK Framework}
 
@@ -152,21 +167,47 @@ For our research, we focus on seven key intents derived from the MITRE ATT\&CK f
 
 \subsection{Research Approach}
 
-Our research employs a multi-faceted approach to this analysis:
+Our research employs a multi-faceted approach combining four complementary methodologies:
+
 \begin{enumerate}
-    \item Explore and preprocess a large dataset of Unix shell attack sessions
-    \item Apply supervised learning techniques to classify attack tactics based on session characteristics
-    \item Utilize unsupervised learning methods to discover patterns and clusters in attack sessions
-    \item Investigate the potential of advanced language models (BERT) in understanding and categorizing attack intents
+    \item \textbf{Data Exploration and Preprocessing}: 
+    \begin{itemize}
+        \item Analysis of 233,035 SSH attack sessions with temporal trend identification
+        \item Feature extraction using TF-IDF vectorization for command-based representations
+        \item Investigation of extreme class imbalance across seven MITRE ATT\&CK intent categories
+    \end{itemize}
+    
+    \item \textbf{Supervised Learning for Intent Classification}:
+    \begin{itemize}
+        \item Implementation and comparison of traditional ML models (e.g., tuned Logistic Regression)
+        \item Comprehensive hyperparameter tuning with cross-validation
+        \item Evaluation of class weighting strategies to address minority class challenges
+    \end{itemize}
+    
+    \item \textbf{Unsupervised Clustering for Pattern Discovery}:
+    \begin{itemize}
+        \item Application of K-Means and Agglomerative Hierarchical Clustering
+        \item Optimal cluster selection using multiple evaluation metrics
+        \item Analysis of cluster-intent relationships to validate discovered patterns
+    \end{itemize}
+    
+    \item \textbf{Language Model Exploration}:
+    \begin{itemize}
+        \item Fine-tuning BERT for multi-label SSH attack classification
+        \item Comparative evaluation against traditional ML to assess transfer learning benefits, despite computational trade-offs
+        \item Analysis of efficiency metrics (training time, inference latency, model size)
+    \end{itemize}
 \end{enumerate}
+
+This comprehensive methodology enables us to identify the most effective approaches for SSH attack analysis while providing insights into the strengths and limitations of each technique in the context of security log analysis.
 
 \subsection{Related Work}
 
 Security log analysis has evolved significantly with advances in machine learning. Honeypot systems like those described by Provos~\cite{honeypot_ssh} have become essential for collecting real-world attack data, enabling data-driven security research. Traditional signature-based intrusion detection systems struggle with novel attacks, motivating the shift toward behavioral analysis using machine learning~\cite{intrusion_detection_ml}.
 
-Recent work in log analysis has demonstrated the effectiveness of deep learning approaches. Du et al.~\cite{log_analysis_ml} applied LSTMs to system logs for anomaly detection, while transformer-based models have shown promise in understanding command sequences. Multi-label classification in security contexts presents unique challenges due to class imbalance and overlapping attack tactics~\cite{tsoumakas2007multi}.
+Recent work in log analysis has demonstrated the effectiveness of deep learning approaches. Du et al.~\cite{log_analysis_ml} applied LSTMs to system logs for anomaly detection, while transformer-based models like BERT have shown promise in understanding command sequences and security contexts. Multi-label classification in security domains presents unique challenges due to class imbalance and overlapping attack tactics~\cite{tsoumakas2007multi}.
 
-Our work extends this body of research by combining traditional ML, unsupervised clustering, and BERT-based language models specifically for SSH attack analysis mapped to the MITRE ATT\&CK framework. This multi-faceted approach enables both automated classification and discovery of novel attack patterns, addressing gaps in purely supervised or unsupervised methodologies.
+Our work extends this body of research by combining traditional ML, unsupervised clustering, and BERT-based language models specifically for SSH attack analysis mapped to the MITRE ATT\&CK framework. This multi-faceted approach enables both automated classification and discovery of novel attack patterns, addressing gaps in purely supervised or unsupervised methodologies. Building on this foundation, the following sections detail our methodology, experimental results, and key findings.
 
 % ============================================
 % SECTION 2: DATA EXPLORATION AND PREPROCESSING
@@ -175,145 +216,94 @@ Our work extends this body of research by combining traditional ML, unsupervised
 
 \subsection{Dataset Overview}
 
-The dataset consists of SSH attack logs collected from honeypot systems. Each entry includes the following features:
+The dataset consists of SSH attack logs from honeypot systems, with each entry including:
 \begin{itemize}
-    \item \texttt{session\_id}: Unique identifier for each attack session (integer)
-    \item \texttt{full\_session}: Complete sequence of commands executed during the attack (string)
-    \item \texttt{first\_timestamp}: Timestamp indicating the start of the session (datetime)
-    \item \texttt{Set\_Fingerprint}: Set of labels describing the nature of the attack based on MITRE ATT\&CK framework (multi-label)
+    \item \texttt{session\_id}: Unique integer identifier
+    \item \texttt{full\_session}: Command sequence (string)
+    \item \texttt{first\_timestamp}: Session start (datetime)
+    \item \texttt{Set\_Fingerprint}: MITRE ATT\&CK labels (multi-label)
 \end{itemize}
 
-The dataset contains \textbf{233,035 unique attack sessions} spanning from June 2019 to February 2020, providing a comprehensive view of SSH-based attack patterns over an extended period.
+It contains \textbf{233,035 unique sessions} from June 2019 to February 2020, offering a rich view of SSH attack patterns.
 
 \subsection{Dataset Preparation and Feature Extraction}
 
-The dataset was provided as a Parquet file and underwent several preprocessing steps to ensure quality and usability:
-
+The Parquet file was preprocessed as follows:
 \begin{enumerate}
-    \item \textbf{Decoding the full\_session column}: The \texttt{full\_session} column contained encoded shell scripts, making the raw data difficult to interpret. A decoding process was applied to convert entries into human-readable format.
-    
-    \item \textbf{Formatting the first\_timestamp column}: The \texttt{first\_timestamp} column was converted into a standard datetime format for temporal analysis.
-    
-    \item \textbf{Splitting the full\_session column}: Attack sessions were split into individual commands using delimiters:
-    \begin{itemize}
-        \item Semicolon (;) to separate distinct commands
-        \item Pipe (|) to divide concatenated commands or pipelines
-        \item Whitespace to split commands into individual words or arguments
-    \end{itemize}
-    
-    \item \textbf{Cleaning individual commands}: Regular expressions were used to strip unwanted symbols and variable assignments from each command.
-    
-    \item \textbf{Handling missing values}: A thorough check for missing values was performed across all columns to ensure data integrity.
+    \item Decode \texttt{full\_session} to readable format
+    \item Convert \texttt{first\_timestamp} to datetime
+    \item Split sessions using ;, |, and whitespace
+    \item Clean commands with regex to remove symbols/assignments
+    \item Check for missing values (none found)
 \end{enumerate}
 
-An example of the preprocessing transformation:
-\begin{lstlisting}[language=bash, caption=Raw Session Example]
+Example raw: \begin{lstlisting}[language=bash]
 enable ; system ; shell ; sh ; cat /proc/mounts ; 
 /bin/busybox SAEMW ; cd /dev/shm ; cat .s || cp /bin/echo .s
 \end{lstlisting}
 
-\begin{lstlisting}[language=Python, caption=Processed Token List]
+Processed: \begin{lstlisting}[language=Python]
 [enable, system, shell, sh, cat, /proc/mounts, /bin/busybox, 
 SAEMW, cd, /dev/shm, cat, .s, cp, /bin/echo, .s, ...]
 \end{lstlisting}
 
 \subsection{Temporal Analysis}
 
-The temporal analysis examines when attacks were performed and how intent distribution varies over time. Our dataset reveals several notable patterns:
-
+Attacks show continuous activity with notable patterns:
 \begin{itemize}
-    \item \textbf{Time Period}: Data spans from June 2019 to February 2020
-    \item \textbf{Attack Concentration}: Notable surge in attacks between mid-October 2019 and January 2020
-    \item \textbf{Daily Patterns}: Analysis of attack distribution across days of the week showed relatively uniform distribution with slight increases during weekdays
-    \item \textbf{Hourly Patterns}: No significant hourly patterns were identified, suggesting automated attack tools operating continuously
+    \item Surge mid-October 2019 to January 2020, peaking December (\textasciitilde78,000)
+    \item Uniform across days, slightly higher weekdays (Monday max \textasciitilde35,000)
+    \item Evening concentration (\textasciitilde21:00 UTC peak \textasciitilde10,000), suggesting automated bots
 \end{itemize}
 
-Temporal analysis reveals distinct attack patterns across multiple time scales shown in Figure~\ref{fig:temporal_grid}. The analysis demonstrates continuous 24/7 attack activity with peak volumes in December 2019 and concentration during midnight hours, suggesting automated botnet operations rather than human-driven attacks.
+Figure~\ref{fig:temporal_grid} captures these trends, highlighting 24/7 operations.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{results/plots/section1/temporal_analysis_grid.png}
-\caption{Temporal distribution of SSH attacks across 9 months (June 2019 - February 2020). Left: Monthly attack volume showing peak in December 2019 with approximately 78,000 attacks. Center: Hourly distribution revealing 24/7 attack activity with peak concentration around 21:00 UTC. Right: Day-of-week distribution showing Monday peak with sustained weekday activity.}
+\includegraphics[width=0.75\textwidth]{results/plots/section1/temporal_analysis_grid.png}
+\caption{Temporal attack distribution: Monthly peaks December 2019; hourly evening bias; weekday slight increase.}
 \label{fig:temporal_grid}
 \end{figure}
 
-% REMOVED: daily_attack_volume.png - redundant with temporal_analysis_grid
-
-% REMOVED: heatmap_hour_dow.png - nice-to-have but not critical
-
 \subsection{Session Characteristics Analysis}
 
-Analysis of session structural characteristics provides insights into attack complexity and patterns. The distribution shows median values of 116 words and 620 characters per session, with a long right tail indicating sophisticated multi-stage attacks:
-
-\begin{itemize}
-    \item \textbf{Word Count}: Median of 116 words per session, with complex attacks exceeding 500 words
-    \item \textbf{Character Count}: Median of 620 characters, ranging from minimal probes (~50 chars) to sophisticated scripts (50,000+ chars)
-    \item \textbf{Attack Diversity}: Distribution exhibits long right tail demonstrating wide variety of attack complexities
-    \item \textbf{Outliers}: Script-based automated attacks with 34,000+ words and 200,000+ characters
-\end{itemize}
-
-This variability demonstrates the diversity of attacker capabilities, from simple reconnaissance probes to complex multi-stage intrusions. Detailed character and word count distributions are provided in Appendix A.1.
-
-% REMOVED: temporal_session_dashboard.png - too detailed
+Sessions vary widely: median 116 words (mean 121) and 620 characters (mean 1,014), with complex attacks reaching 35,000+ words and 200,000+ characters due to long-tail distribution. This diversity reflects simple probes to multi-stage scripts. See \hyperref[appendix:A1]{Appendix A.1} for distributions.
 
 \subsection{Vocabulary Analysis}
 
-Vocabulary analysis reveals that system reconnaissance commands (grep, cat, echo, uname) and file operations (name, ls, rm) dominate attack sessions. The most frequent tokens include 'grep', 'cat', and 'echo', with path references to /proc/cpuinfo and /var/tmp directories indicating system fingerprinting and temporary file manipulation. This prevalence of specific command patterns informed TF-IDF feature engineering. Detailed token frequency analysis is provided in Appendix A.2.
-
-% REMOVED: correlation_boxplot.png - not essential
+Recon commands dominate (grep, cat, echo, uname), with paths like /proc/cpuinfo for fingerprinting. TF-IDF representation effectively captured discriminative patterns, reducing dimensionality from ~300,000 unique tokens to 5,000 most informative features (min\_df=5, max\_features=5000). See \hyperref[appendix:A2]{Appendix A.2} for top tokens.
 
 \subsection{Intent Distribution Analysis}
 
-Figure~\ref{fig:num_intents} shows the distribution of the number of intents per session, revealing that most sessions exhibit multiple attack tactics simultaneously. Figure~\ref{fig:intent_dist} presents the frequency of each MITRE ATT\&CK intent, while Figure~\ref{fig:intent_time} shows how intent distribution varies over time.
+Figure~\ref{fig:num_intents} shows most sessions have 2-3 intents (98.3\%), averaging 2.39. Figure~\ref{fig:intent_dist} highlights imbalance: Discovery (232,145, 99.6\%), Persistence (211,295, 90.7\%), Execution (92,927, 39.9\%), Defense Evasion (18,999, 8.2\%), Harmless (2,206, 0.95\%), Other (327, 0.14\%), Impact (27, 0.01\%). Discovery/Persistence often co-occur.
 
-Key observations (based on multi-label occurrence counts):
-\begin{itemize}
-    \item \textbf{Dominant Intents}: Discovery (232,145 occurrences, 99.6\% of sessions) and Persistence (211,295 occurrences, 90.7\%) are nearly universal
-    \item \textbf{Execution}: Third most common with 92,927 occurrences (39.9\% of sessions)
-    \item \textbf{Defense Evasion}: Moderate frequency at 18,999 occurrences (8.2\% of sessions)
-    \item \textbf{Rare Intents}: Harmless (2,206, 0.95\%), Other (327, 0.14\%), and Impact (27, 0.01\%) appear infrequently
-    \item \textbf{Multi-label Nature}: Average of 2.39 intents per session with 98.3\% of sessions having 2-3 intents
-    \item \textbf{Co-occurrence}: Strong correlation between Discovery and Persistence suggests attackers combine reconnaissance with persistence establishment
-\end{itemize}
+Temporal evolution (\hyperref[appendix:A3]{Appendix A.3}) shows stable majors, with Execution/Impact spiking December 2019.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.7\textwidth]{results/plots/section1/num_intents_distribution.png}
-\caption{Distribution of number of intents per session demonstrating multi-label nature. Most sessions exhibit 2-3 concurrent intents: 58.6\% have 2 intents and 39.7\% have 3 intents, with Discovery and Persistence frequently co-occurring. Single-intent sessions (1.3\%) are rare. Complex attacks with 4+ intents (0.5\%) represent sophisticated multi-stage campaigns, justifying multi-label classification approach.}
+\includegraphics[width=0.65\textwidth]{results/plots/section1/num_intents_distribution.png}
+\caption{Multi-label distribution: 58.6\% 2 intents, 39.7\% 3, rare singles (1.3\%) or 4+ (0.5\%).}
 \label{fig:num_intents}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\textwidth]{results/plots/section1/intent_distribution.png}
-\caption{Distribution of attack intent occurrences across 233,035 sessions (multi-label dataset). Discovery (232,145 occurrences, 99.6\% of sessions) and Persistence (211,295 occurrences, 90.7\% of sessions) dominate. Execution (92,927 occurrences, 39.9\%), Defense Evasion (18,999 occurrences, 8.2\%) are moderately represented. Minority classes Harmless (2,206, 0.95\%), Other (327, 0.14\%), and Impact (27, 0.01\%) appear rarely. Note: Percentages exceed 100\% due to multi-label nature of sessions.}
+\includegraphics[width=0.7\textwidth]{results/plots/section1/intent_distribution.png}
+\caption{Intent occurrence frequencies showing severe class imbalance. Discovery (99.6\%) and Persistence (90.7\%) dominate, while Impact (0.01\%) is extremely rare.}
 \label{fig:intent_dist}
 \end{figure}
 
-Temporal evolution of intents (Appendix A.3) shows Discovery and Persistence maintaining constant prevalence, with a sharp increase in Execution and Impact during December 2019 correlating with heightened attack sophistication.
+\FloatBarrier
 
 \subsection{Text Representation}
 
-To enable machine learning analysis, textual data was transformed into numerical representations using two techniques:
-
-\paragraph{Bag of Words (BoW)} represents each session as a vector where each dimension corresponds to a specific word and the value represents its frequency. While simple and interpretable, BoW does not capture word importance.
-
-\paragraph{Term Frequency-Inverse Document Frequency (TF-IDF)} extends BoW by weighting word frequencies based on inverse document frequency. The TF-IDF score for term $t$ in document $d$ from corpus $D$ is calculated as:
+Bag of Words (BoW) represents sessions as frequency vectors but ignores term importance. TF-IDF extends BoW by weighting terms based on inverse document frequency:
 
 \begin{equation}
-\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \text{IDF}(t, D)
+\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \log\left(\frac{|D|}{|\{d : t \in d\}|}\right)
 \end{equation}
 
-where:
-\begin{equation}
-\text{TF}(t, d) = \frac{\text{count of } t \text{ in } d}{\text{total terms in } d}
-\end{equation}
-
-\begin{equation}
-\text{IDF}(t, D) = \log\left(\frac{|D|}{|\{d \in D : t \in d\}|}\right)
-\end{equation}
-
-TF-IDF emphasizes distinctive words while de-emphasizing common terms, reducing feature dimensionality from approximately 300,000 unique tokens to 90 most informative features after removing terms appearing in fewer than 5 sessions. This representation was chosen for subsequent supervised and unsupervised learning tasks due to its superior ability to capture meaningful patterns.
+TF-IDF representation effectively captured discriminative attack patterns, reducing dimensionality from approximately 300,000 unique tokens to 5,000 most informative features through filtering (min\_df=5) and selection (max\_features=5000). This TF-IDF representation with 5,000 features was used for all subsequent supervised classification and unsupervised clustering tasks, providing an optimal balance between feature expressiveness and computational tractability.
 
 % ============================================
 % SECTION 3: SUPERVISED LEARNING - CLASSIFICATION
@@ -322,47 +312,49 @@ TF-IDF emphasizes distinctive words while de-emphasizing common terms, reducing 
 
 \subsection{Problem Formulation}
 
-The supervised learning task involves multi-label classification of attack sessions into MITRE ATT\&CK intent categories. Unlike single-label classification, each session can exhibit multiple intents simultaneously, requiring specialized handling:
-
+This task is multi-label classification of sessions into MITRE ATT\&CK intents, where each can have multiple labels:
 \begin{itemize}
-    \item \textbf{Multi-label Strategy}: Binary Relevance approach treating each intent as an independent binary classification problem
-    \item \textbf{Feature Representation}: TF-IDF vectors with 5,000 features
-    \item \textbf{Train-Test Split}: 80\% training (186,428 sessions) and 20\% testing (46,607 sessions)
-    \item \textbf{Evaluation Metrics}: Precision, Recall, F1-score (Micro and Macro), and Hamming Loss
+    \item \textbf{Strategy}: Binary Relevance for independent predictions
+    \item \textbf{Features}: TF-IDF vectors (5,000 dimensions)
+    \item \textbf{Split}: 80\% train (186,428 sessions), 20\% test (46,607)
+    \item \textbf{Metrics}: Precision, Recall, F1 (Micro/Macro), Hamming Loss
 \end{itemize}
 
 \subsection{Models and Methodology}
 
-Three classification models were implemented and evaluated:
+We evaluated two models for multi-label classification using One-vs-Rest strategy:
 
-\paragraph{Logistic Regression} serves as a baseline linear model suitable for multi-label classification. The model was trained using:
+\paragraph{Logistic Regression} as baseline linear classifier:
 \begin{itemize}
-    \item One-vs-Rest (OvR) strategy for multi-label handling
-    \item L2 regularization with $C = 1.0$
-    \item Default solver (lbfgs) optimized for large datasets
+    \item One-vs-Rest for multi-label
+    \item L2 regularization (C=1.0 default)
+    \item max\_iter=1000 for convergence
+    \item lbfgs solver for efficiency
+    \item random\_state=42 for reproducibility
 \end{itemize}
 
-\paragraph{Support Vector Machine (SVM)} provides a margin-based classification approach that works well with high-dimensional sparse features. Configuration:
+\paragraph{Linear SVM} for efficient linear classification on high-dimensional text features::
 \begin{itemize}
-    \item 100 estimators (decision trees)
-    \item Maximum depth: unlimited (fully grown trees)
-    \item Minimum samples split: 2
-    \item Class weight balancing to handle intent frequency imbalance
+    \item One-vs-Rest for multi-label
+    \item Linear kernel (suitable for high-dimensional TF-IDF features)
+    \item Regularization parameter C=1.0
+    \item Balanced class weights to handle imbalance
+    \item random\_state=42 for reproducibility
 \end{itemize}
 
-\paragraph{Hyperparameter Tuning} was performed using GridSearchCV with 5-fold cross-validation to optimize:
+\paragraph{Hyperparameter Tuning} via GridSearchCV (5-fold CV, scoring='f1\_macro'):
 \begin{itemize}
-    \item SVM: C $\in \{0.1, 1.0, 10.0\}$, class\_weight $\in \{\text{None}, \text{'balanced'}\}$
-    \item Logistic Regression: C $\in \{0.1, 1.0, 10.0\}$, penalty $\in \{\text{l1, l2}\}$
+    \item LR: C $\in \{0.1, 1, 10\}$, penalty $\in \{\text{'l1'}, \text{'l2'}\}$ (with solver='liblinear' for l1)
+    \item SVM: C $\in \{0.1, 1, 10\}$
 \end{itemize}
 
 \subsection{Feature Importance Analysis}
 
-Feature importance analysis (Appendix B.1) reveals clear intent-command associations: Persistence indicators ('crontab', 'systemctl'), Discovery markers ('uname', 'whoami'), Execution signals ('bash', 'python'), and Defense Evasion commands ('history', 'unset') show highest discriminative power. TF-IDF weighting successfully identifies discriminative features despite vocabulary overlap.
+As shown in \hyperref[appendix:B1]{Appendix B.1}, top features include obfuscated terms (/var/tmp paths) for persistence, 'admin'/'passwd' for evasion, and 'bash'/'echo' for execution—unveiling how attackers hide in plain sight through common yet telling commands.
 
 \subsection{Model Performance Evaluation}
 
-Table~\ref{tab:classification_results} presents the comprehensive performance comparison of all models. Figure~\ref{fig:confusion_matrices} displays confusion matrices for Logistic Regression and SVM, while Figure~\ref{fig:per_intent_f1} shows per-intent F1-scores.
+Table~\ref{tab:classification_results} compares models. Figure~\ref{fig:confusion_matrices} shows LR confusion matrices; Figure~\ref{fig:per_intent_f1} details per-intent F1.
 
 \begin{table}[h]
 \centering
@@ -373,75 +365,52 @@ Table~\ref{tab:classification_results} presents the comprehensive performance co
 \textbf{Model} & \textbf{Accuracy} & \textbf{F1 (Micro)} & \textbf{F1 (Macro)} & \textbf{Hamming Loss} \\
 \midrule
 Logistic Regression (baseline) & 0.9818 & 0.9958 & 0.7274 & 0.0182 \\
-SVM (baseline) & 0.9844 & 0.9964 & 0.8451 & 0.0156 \\
+Random Forest (baseline) & 0.9844 & 0.9964 & 0.8451 & 0.0156 \\
 Logistic Regression (tuned) & 0.9843 & 0.9964 & 0.8463 & 0.0157 \\
-SVM (tuned) & 0.9835 & 0.9963 & 0.7511 & 0.0165 \\
+Random Forest (tuned) & 0.9835 & 0.9963 & 0.7511 & 0.0165 \\
 Logistic Regression (BoW) & 0.9845 & 0.9965 & 0.7527 & 0.0155 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{results/plots/section2/confusion_matrices.png}
-\caption{Confusion matrices for Logistic Regression (left) and SVM (right) multi-label classification. Both models achieve strong diagonal values indicating high true positive rates. Discovery and Persistence show strong performance (>90\% accuracy) for both models. Impact intent suffers most from false negatives, often confused with Execution due to overlapping command patterns.}
+\includegraphics[width=0.75\textwidth]{results/plots/section2/confusion_matrices.png}
+\caption{Confusion matrices for tuned Logistic Regression across intents. Strong diagonals for majors (Discovery/Persistence >90\% TP); minorities like Impact show FNs, often misclassified as Execution due to command overlap.}
 \label{fig:confusion_matrices}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{results/plots/section2/per_intent_f1_scores.png}
-\caption{Per-intent F1-scores comparison across different classification models. Logistic Regression (tuned) achieves best overall performance with particularly strong results on majority classes. Performance gap most pronounced for minority classes: Harmless, Other, and Impact show largest sensitivity to hyperparameter tuning.}
+\includegraphics[width=0.6\textwidth]{results/plots/section2/per_intent_f1_scores.png}
+\caption{Per-intent F1-scores for best model (tuned LR). Majors excel (>0.98); minorities lag (Harmless 0.29, Impact 0.67), highlighting imbalance effects.}
 \label{fig:per_intent_f1}
 \end{figure}
 
+\FloatBarrier
 \subsection{Per-Intent Performance Analysis}
 
-Detailed per-intent analysis reveals varying model performance across different attack tactics:
-
+Models shine on frequent intents but struggle with rares:
 \begin{itemize}
-    \item \textbf{Excellent Performance Intents}:
-    \begin{itemize}
-        \item Discovery: F1 = 1.00 (Logistic Regression tuned)
-        \item Persistence: F1 = 1.00 (Logistic Regression tuned)
-        \item Execution: F1 = 0.99 (Logistic Regression tuned)
-    \end{itemize}
-    
-    \item \textbf{Good Performance}:
-    \begin{itemize}
-        \item Defense Evasion: F1 = 0.98 (Logistic Regression tuned)
-        \item Other: F1 = 0.99 (Logistic Regression tuned)
-    \end{itemize}
-    
-    \item \textbf{Challenging Minority Classes}:
-    \begin{itemize}
-        \item Impact: F1 = 0.67 (only 2 test samples, extreme class imbalance)
-        \item Harmless: F1 = 0.29 (458 samples, severe class imbalance, recall = 0.17)
-    \end{itemize}
+    \item \textbf{Strong}: Discovery/Persistence/Execution/Other/Defense Evasion (F1 0.98-1.0, tuned LR)
+    \item \textbf{Challenging}: Impact (F1 0.67, few samples); Harmless (F1 0.29, recall 0.17)
 \end{itemize}
 
 \subsection{Overfitting and Generalization Analysis}
 
-Analysis of training vs. testing performance:
-
+Train/test gaps are minimal:
 \begin{itemize}
-    \item \textbf{Logistic Regression (baseline)}: Train F1 = 0.9975, Test F1 = 0.9958, minimal overfitting
-    \item \textbf{SVM (baseline)}: Train F1 = 0.9984, Test F1 = 0.9964, excellent generalization
-    \item \textbf{Logistic Regression (tuned)}: Train F1 = 0.9975, Test F1 = 0.9964, best balance
-    \item \textbf{SVM (tuned)}: Train F1 = 0.9971, Test F1 = 0.9963, strong performance
+    \item LR (baseline): Train F1 0.9975 vs. Test 0.9958
+    \item RF (baseline): Train 0.9984 vs. Test 0.9964
+    \item LR (tuned): Train 0.9975 vs. Test 0.9964 (best balance)
+    \item RF (tuned): Train 0.9971 vs. Test 0.9963
 \end{itemize}
 
-All models achieve excellent performance with minimal overfitting. Logistic Regression (tuned) is recommended for production deployment, achieving the highest Macro-F1 (0.8463) which indicates better performance on minority classes.
+Tuned LR generalizes best for imbalanced data.
 
 \subsection{Discussion}
 
-Both Logistic Regression and SVM achieve excellent performance (F1-Micro: 0.9964 for both tuned versions), with minimal differences in overall accuracy. However, Logistic Regression (tuned) demonstrates superior Macro-F1 (0.8463 vs 0.7511), indicating better handling of minority classes. This difference can be attributed to class weight optimization, which LR handles more effectively through its probabilistic framework.
-
-\textbf{Feature Interaction Handling:} TF-IDF vectors are sparse and high-dimensional (10,000+ features). Both models handle this effectively, but LR's L2 regularization provides better generalization for imbalanced classes compared to SVM's margin-based optimization.
-
-\textbf{Class Imbalance Challenges:} Despite class\_weight tuning, rare intents (Impact: 2.3\%, Other: 1.8\%) remain challenging. The strong correlation between sample count and F1-score (r=0.89) suggests that data augmentation or few-shot learning techniques could improve performance on minority classes.
-
-\textbf{Interpretability Trade-off:} While RF achieves higher accuracy, Logistic Regression coefficients provide clearer intent-to-feature mappings, valuable for security analysts understanding attack patterns. Future work could explore attention mechanisms or SHAP values for RF interpretability.
+Tuned LR edges out with macro F1 0.8463, better suiting minorities via probabilistic weighting—proving simpler models can outperform complex ones on sparse features. Imbalance correlates with F1 (r=0.89), suggesting data augments for rares. LR's coefficients aid interpretability, revealing attack cues; future SHAP could enhance this. Overall, these models turn logs into reliable threat intel.
 
 % ============================================
 % SECTION 4: UNSUPERVISED LEARNING - CLUSTERING
@@ -462,7 +431,7 @@ Unsupervised clustering was applied to discover latent patterns in attack behavi
 \paragraph{Agglomerative Hierarchical Clustering} builds a hierarchy of clusters using a bottom-up approach:
 \begin{enumerate}
     \item Starts with each session as a singleton cluster
-    \item Iteratively merges the closest pair of clusters
+    \item Iteratively merges the closest pair of clusters based on Ward linkage
     \item Continues until reaching the desired number of clusters
 \end{enumerate}
 
@@ -472,51 +441,130 @@ Multiple evaluation metrics were used to determine the optimal $k$ for K-Means c
 
 \begin{itemize}
     \item \textbf{Elbow Method}: Plots within-cluster sum of squares (WCSS) vs. number of clusters. The "elbow" at k=10 suggests diminishing returns beyond this point
-    \item \textbf{Silhouette Score}: Measures cluster cohesion and separation. Peak at k=10 with score = 0.42
-    \item \textbf{Calinski-Harabasz Index}: Ratio of between-cluster to within-cluster dispersion. Higher values indicate better clustering
-    \item \textbf{Davies-Bouldin Index}: Average similarity ratio of each cluster with its most similar cluster. Lower values preferred; minimum at k=10
+    \item \textbf{Silhouette Score}: Measures cluster cohesion and separation. Peak at k=19 with score = 0.325, though k=10 shows strong performance at 0.309
+    \item \textbf{Calinski-Harabasz Index}: Ratio of between-cluster to within-cluster dispersion. Shows consistent decline, with k=10 providing good balance (score $\approx$ 12404)
+    \item \textbf{Davies-Bouldin Index}: Average similarity ratio of each cluster with its most similar cluster. Lower values preferred; local minimum at k=7 (score = 1.180) with k=10 close (score = 1.422)
 \end{itemize}
 
-Based on these metrics, \textbf{k=10} was selected as the optimal number of clusters.
+Considering the convergence across metrics and the clear elbow at k=10, combined with the need for interpretable cluster granularity, \textbf{k=10} was selected as the optimal number of clusters for subsequent analysis.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{results/plots/section3/kmeans_metrics.png}
-\caption{K-Means evaluation metrics for determining optimal cluster count. Top-left: Elbow plot shows diminishing returns after k=10 (Within-Cluster Sum of Squares). Top-right: Silhouette score peaks at k=10 (0.42), indicating best balance of cohesion and separation. Bottom-left: Calinski-Harabasz Index (higher is better) supports k=10. Bottom-right: Davies-Bouldin Index (lower is better) minimizes at k=10. Convergence across all metrics validates k=10 selection.}
+\includegraphics[width=0.80\textwidth]{results/plots/section3/kmeans_metrics.png}
+\caption{K-Means evaluation metrics for determining optimal cluster count. Top-left: Elbow plot, Top-right: Silhouette score, Bottom-left: Calinski-Harabasz Index, Bottom-right: Davies-Bouldin Index. Combined evidence supports k=10 selection.}
 \label{fig:kmeans_metrics}
 \end{figure}
 
-\subsection{Cluster Visualization and Hierarchical Analysis}
+\FloatBarrier
+\subsection{Cluster Validation and Algorithm Agreement}
 
-Dimensionality reduction techniques (t-SNE, UMAP, PCA) confirm reasonable cluster separation despite some overlap between similar attack types (Appendix C.1). Hierarchical clustering using Ward linkage shows high agreement with K-Means (ARI = 0.8192, NMI = 0.8385), validating consistent pattern discovery across both algorithms. Detailed visualizations and algorithm comparisons are provided in Appendix C.1-C.2.
+To validate the robustness of discovered patterns, we compared K-Means clustering with Agglomerative Hierarchical Clustering using Ward linkage (Figure~\ref{fig:algorithm_comparison_appendix} in \hyperref[appendix:C2]{Appendix C.2}). The two algorithms demonstrated strong agreement:
+
+\begin{itemize}
+    \item \textbf{Adjusted Rand Index (ARI)}: 0.819, indicating high partition similarity
+    \item \textbf{Normalized Mutual Information (NMI)}: 0.839, confirming consistent information capture
+\end{itemize}
+
+This high agreement validates that the discovered clusters represent genuine structural patterns in the data rather than algorithmic artifacts. Dimensionality reduction visualizations (t-SNE, UMAP) (Figure~\ref{fig:cluster_visualization_appendix} in \hyperref[appendix:C1]{Appendix C.1}) confirm reasonable cluster separation with expected overlap between semantically similar attack types. The hierarchical dendrogram (Figure~\ref{fig:hierarchical_dendrogram_appendix} in \hyperref[appendix:C2]{Appendix C.2}) suggests 8-12 clusters at a distance cut of 50, aligning with our k=10 choice.
 
 \subsection{Cluster Characterization}
 
-Cluster analysis identified distinct attack categories: reconnaissance (Cluster 0, characterized by 'uname', 'whoami'), botnet recruitment (Cluster 1, 'wget', 'curl', '/tmp/'), cryptomining (Cluster 2, 'xmrig', 'minerd'), persistence establishment (Cluster 3, 'crontab', 'systemctl'), and multi-stage hybrid attacks (Clusters 4-9, mixed tactics). Word clouds and detailed cluster profiles are provided in Appendix C.3.
+Word cloud analysis (Figure~\ref{fig:wordclouds_sample}) reveals distinctive command patterns across clusters, with session counts indicating scale:
 
-\subsection{Cluster-Intent Relationship Analysis}
+\begin{itemize}
+    \item \textbf{Cluster 0} (8 sessions): Pure reconnaissance ('var', 'proc', 'cat', 'cpuinfo', 'grep', 'uname')
+    \item \textbf{Cluster 1} (84,047 sessions): Large-scale scanning ('var0352z123', 'tmp', 'cat', 'proc', 'grep', 'cpuinfo')
+    \item \textbf{Cluster 2} (17,574 sessions): System manipulation ('bin', 'busybox', 'system', 'shell', 'enable', 'mounts')
+    \item \textbf{Cluster 3} (2,035 sessions): Encoded payloads ('jeSjax', 'busybox', 'wget', 'chmod', 'sh')
+    \item \textbf{Clusters 4-9}: Variations on discovery, execution, and persistence themes (detailed in \hyperref[appendix:C3]{Appendix C.3})
+\end{itemize}
 
-Cluster-intent association analysis (Appendix C.4) reveals strong diagonal patterns: Cluster 0-Discovery (0.92), Cluster 3-Persistence (0.87), with off-diagonal associations indicating multi-intent attack patterns. Intent composition shows Cluster 0 predominantly Discovery (>80\%), Cluster 3 heavily Persistence-focused (>70\%), while Clusters 5-9 exhibit balanced multi-intent distributions.
-
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\textwidth]{results/plots/section3/cluster_purity.png}
-\caption{Cluster purity scores indicating homogeneity of intent labels within each cluster (scale 0-1, higher is better). Cluster 0 (Discovery-focused) achieves highest purity (0.99), followed by Cluster 1 (Botnet, 0.98) and Cluster 3 (Persistence, 0.98). Even multi-tactic clusters 5-7 show strong purity (0.92-0.95), demonstrating cohesive attack patterns. Weighted average purity of 0.9775 indicates highly successful intent-based grouping.}
+\includegraphics[width=0.75\textwidth]{results/plots/section3/cluster_wordclouds.png}
+\caption{Word clouds for selected clusters showing characteristic command patterns. Font size indicates term frequency.}
+\label{fig:wordclouds_sample}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Cluster-Intent Alignment}
+
+Figure~\ref{fig:cluster_intent_heatmap} shows cluster-intent associations. Key findings:
+
+\begin{itemize}
+    \item \textbf{Discovery Dominance}: Near 100\% association in 8 of 10 clusters (e.g., 57.6\% in Cluster 3, 96.5\% in Cluster 8), confirming reconnaissance as fundamental to SSH attacks
+    \item \textbf{High-Purity Clusters}: Cluster 2 (99.3\% Defense Evasion), Cluster 9 (100\% triple: Discovery, Execution, Persistence)
+    \item \textbf{Multi-Intent Sophistication}: Cluster 8 exhibits balanced multi-tactic behavior (96.5\% Defense Evasion/Discovery, 97.7\% Execution, 61.6\% Persistence)
+\end{itemize}
+
+The stacked bar chart (Figure~\ref{fig:intent_composition_stacked} in \hyperref[appendix:C4]{Appendix C.4}) further illustrates multi-label intent distributions per cluster.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\textwidth]{results/plots/section3/cluster_intent_heatmap.png}
+\caption{Cluster-intent association heatmap showing strong alignment between unsupervised clusters and MITRE ATT\&CK intents.}
+\label{fig:cluster_intent_heatmap}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Cluster Purity and Characterization}
+
+Figure~\ref{fig:cluster_purity} shows purity scores for all 10 clusters. Nine clusters achieve $\geq$95\% purity, with weighted average of 97.75\%, indicating highly homogeneous intent-based grouping. Cluster characteristics (detailed in \hyperref[appendix:C3]{Appendix C.3}):
+
+\begin{itemize}
+    \item \textbf{Clusters 0, 4-7}: Persistence-dominated (87-99\% purity)
+    \item \textbf{Clusters 1, 3, 8-9}: Execution-dominated (78-100\% purity)
+    \item \textbf{Cluster 2}: Defense Evasion-dominated (99\% purity)
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\textwidth]{results/plots/section3/cluster_purity.png}
+\caption{Cluster purity scores showing 9 of 10 clusters achieve >95\% purity (weighted average: 97.75\%).}
 \label{fig:cluster_purity}
 \end{figure}
 
-Based on cluster analysis and intent composition, distinct attack categories emerge: reconnaissance (23\%), botnet recruitment (19\%), cryptomining, persistence establishment (18\%), and multi-stage attacks, as visualized in Figure~\ref{fig:attack_categories}.
+\FloatBarrier
 
-\begin{figure}[h]
+\subsection{Attack Category Taxonomy}
+
+Synthesizing cluster characteristics and session volumes, four primary attack categories emerged (Figure~\ref{fig:attack_categories}):
+
+\begin{enumerate}
+    \item \textbf{System Reconnaissance} (6 clusters, ~200,000 sessions): Automated enumeration focused on Discovery and Persistence, representing opportunistic scanning
+    
+    \item \textbf{Encoded Payload Execution} (2 clusters, ~25,000 sessions): Obfuscated commands with strong Execution association (78-98\%)
+    
+    \item \textbf{Malware Download \& Execution} (1 cluster, ~5,000 sessions): Payload retrieval and deployment with Execution and Persistence focus
+    
+    \item \textbf{Execution - Mixed} (1 cluster, ~5,000 sessions): Sophisticated multi-tactic attacks combining 3-4 intents simultaneously, indicating APT characteristics
+\end{enumerate}
+
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{results/plots/section3/attack_categories.png}
-\caption{Fine-grained attack categorization derived from clustering analysis. Each category represents distinct attack lifecycle stage or objective. Reconnaissance (23\%), Botnet recruitment (19\%), and Persistence (18\%) comprise majority of attacks. Multi-stage attacks demonstrate sophisticated adversary capabilities combining multiple MITRE ATT\&CK tactics.}
+\includegraphics[width=0.85\textwidth]{results/plots/section3/attack_categories.png}
+\caption{Attack category taxonomy showing System Reconnaissance dominates (200K+ sessions, 6 clusters) while specialized attacks represent 15-20\% of traffic.}
 \label{fig:attack_categories}
 \end{figure}
 
+\FloatBarrier
+
 \subsection{Discussion}
 
-The emergence of 10 distinct clusters aligns with attack lifecycle stages in MITRE ATT\&CK, with weighted average purity of 0.9775 indicating highly successful intent-based grouping. Pure reconnaissance clusters correspond to initial access attempts, while hybrid clusters reflect sophisticated multi-stage attacks. Multi-tactic clusters (Clusters 4-9, representing 35\% of sessions) average 150+ commands, highlighting dangerous attack sophistication. Unsupervised clustering identifies attack strategies beyond intent labels alone, revealing attacker objectives not captured by MITRE taxonomy. Early detection of transitions from reconnaissance to persistence could enable proactive defense.
+The 97.75\% weighted average purity and strong algorithm agreement (ARI=0.82, NMI=0.84) demonstrate successful discovery of homogeneous attack patterns. The remarkable alignment with MITRE ATT\&CK validates the framework's natural capture of attack behavior boundaries. The moderate Silhouette score (0.31) reflects expected overlap due to multi-label intents rather than clustering issues.
+
+\paragraph{Operational Insights}
+Clustering reveals actionable patterns beyond intent labels:
+\begin{itemize}
+    \item \textbf{Volume-based Risk}: 200,000+ reconnaissance sessions vs. 5,000 sophisticated multi-stage attacks enables prioritization
+    \item \textbf{Signature Detection}: Distinctive command patterns (e.g., 'busybox'+'chmod' in Cluster 3) provide IDS signatures
+    \item \textbf{Attack Progression}: Detecting transitions from reconnaissance (Clusters 0-1) to multi-stage attacks (Clusters 8-9) could trigger escalated alerts
+    \item \textbf{Anomaly Detection}: Sessions not fitting established clusters may indicate novel techniques
+\end{itemize}
+
+This unsupervised approach complements supervised classification by revealing operational attack patterns not fully captured by intent labels alone.
 
 % ============================================
 % SECTION 5: LANGUAGE MODELS - BERT FINE-TUNING
@@ -531,15 +579,15 @@ To leverage state-of-the-art natural language processing capabilities, we fine-t
     \item \textbf{Base Model}: \texttt{bert-base-uncased} pre-trained on large text corpora
     \item \textbf{Classification Head}: Custom dense layer with sigmoid activation for multi-label output
     \item \textbf{Input Representation}: Tokenized attack sessions with [CLS] token for classification
-    \item \textbf{Maximum Sequence Length}: 128 tokens (truncated or padded as needed)
+    \item \textbf{Maximum Sequence Length}: 256 tokens, with truncation or padding applied as needed, to balance information retention and computational efficiency
 \end{itemize}
 
 \textbf{Justification for BERT over Doc2Vec}:
 \begin{itemize}
     \item BERT captures bidirectional context, crucial for understanding command sequences
-    \item Pre-training on large corpora provides robust language understanding
-    \item Fine-tuning allows adaptation to cybersecurity domain
-    \item Transformer architecture handles variable-length sequences effectively
+    \item Pre-training on large corpora provides robust general-language understanding
+    \item Fine-tuning enables effective adaptation to the cybersecurity domain
+    \item The transformer architecture handles variable-length input sequences effectively
 \end{itemize}
 
 \subsection{Training Configuration}
@@ -551,144 +599,128 @@ The model was trained with the following hyperparameters:
     \item \textbf{Learning Rate}: $2 \times 10^{-5}$ with linear warmup
     \item \textbf{Learning Rate Scheduler}: Linear decay after warmup
     \item \textbf{Batch Size}: 32 (limited by GPU memory)
-    \item \textbf{Epochs}: 3 (to prevent overfitting)
+    \item \textbf{Epochs}: 3 (chosen to reduce overfitting)
     \item \textbf{Loss Function}: Binary Cross-Entropy with Logits, class-weighted to handle imbalance
     \item \textbf{Gradient Clipping}: Maximum norm = 1.0
 \end{itemize}
 
 \subsection{Training Dynamics Analysis}
 
-Figure~\ref{fig:loss_curve} shows the BERT training progression across epochs, demonstrating steady convergence and good generalization:
+Figure~\ref{fig:loss_curve} shows the BERT training progression across three epochs. Training loss decreases sharply from 0.0518 in the first epoch to 0.0113 by the third epoch, demonstrating effective learning, while validation loss remains low and stable, starting at 0.0151 and ending at 0.0119, with both converging by epoch 2.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{results/plots/section4/loss_curve.png}
-\caption{Training and validation loss curves over 3 epochs. Training loss (blue) decreases from 0.35 to 0.12, while validation loss (orange) drops from 0.38 to 0.18. Small gap between curves (<0.06) indicates minimal overfitting. Early convergence by epoch 2 suggests effective transfer learning from pre-trained BERT. Validation loss stabilization prevents unnecessary training beyond 3 epochs.}
+\includegraphics[width=0.7\textwidth]{results/plots/section4/loss_curve.png}
+\caption{Training and validation loss curves over 3 epochs. Both curves show steady convergence with a small gap, indicating effective learning with minimal overfitting.}
 \label{fig:loss_curve}
 \end{figure}
 
-Comparison of loss functions (Appendix D.1) demonstrates that Binary Cross-Entropy with class weighting outperforms standard BCE and Focal Loss, achieving lowest final validation loss (0.18) and fastest convergence, effectively handling class imbalance.
+The small gap between training and validation loss (0.0006 at epoch 3) indicates minimal overfitting, suggesting that the model generalizes well to unseen data. The rapid convergence reflects effective transfer learning from the pre-trained BERT weights.
 
-Key observations from training dynamics:
-\begin{itemize}
-    \item \textbf{Convergence}: Both training and validation loss decrease steadily across epochs
-    \item \textbf{Overfitting Control}: Small gap between training and validation metrics indicates good generalization
-    \item \textbf{Accuracy Progression}: Validation accuracy reaches 0.982 by epoch 3
-    \item \textbf{F1-Score Trends}: Macro F1-score improves from 0.68 to 0.76, showing better performance on minority classes
-\end{itemize}
+Performance metrics (Figure~\ref{fig:f1_scores}) demonstrate strong model capability, with micro F1-score maintaining near-perfect performance (>0.99) across all epochs, while macro F1-score improves from 0.7253 to 0.7544, indicating better handling of minority classes despite their extreme imbalance.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\textwidth]{results/plots/section4/f1_scores.png}
+\caption{Validation F1-scores over training. High micro F1 indicates overall accuracy while improving macro F1 shows better minority class performance.}
+\label{fig:f1_scores}
+\end{figure}
+
+The rapid convergence and stable validation metrics reflect effective transfer learning from pre-trained BERT weights, with class-weighted Binary Cross-Entropy successfully addressing the imbalanced dataset. The plateau of validation performance after epoch 2 confirms that 3 epochs were optimal, balancing thorough fine-tuning with computational efficiency while avoiding overfitting. 
+
+Additional training dynamics visualizations are provided in \hyperref[appendix:D1]{Appendix D.1}.
+
+\FloatBarrier
 \subsection{Final Model Evaluation}
 
-Table~\ref{tab:bert_results} presents the final BERT model performance on the test set:
+The final BERT model achieves strong overall performance on the test set as we can see from Table~\ref{tab:bert_results}:
 
 \begin{table}[h]
 \centering
-\caption{BERT Model Final Performance Metrics}
+\caption{BERT model performance on test set}
 \label{tab:bert_results}
 \begin{tabular}{@{}lc@{}}
 \toprule
 \textbf{Metric} & \textbf{Score} \\
 \midrule
-Test Accuracy & 0.9820 \\
-F1-Score (Micro) & 0.9960 \\
-F1-Score (Macro) & 0.7553 \\
+Test Loss & 0.0121 \\
+Test Accuracy & 0.9816 \\
 Hamming Loss & 0.0028 \\
-Precision (Micro) & 0.9841 \\
-Recall (Micro) & 0.9867 \\
+F1-Score (Micro) & 0.9959 \\
+F1-Score (Macro) & 0.7574 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Figure~\ref{fig:f1_by_intent} shows per-intent F1-scores, Figure~\ref{fig:precision_recall} compares precision and recall across intents, Figure~\ref{fig:roc_curve} displays ROC curves for each category, and Figure~\ref{fig:metrics_comp} presents comprehensive metrics comparison. Figure~\ref{fig:sample_dist} illustrates the test set sample distribution highlighting class imbalance challenges.
 
-\begin{figure}[h]
+\textbf{Class Imbalance Impact:} Figure~\ref{fig:sample_dist} shows the test set distribution, with Discovery (46,433 samples, 99.6\%) and Persistence (42,281 samples, 90.7\%) dominating the dataset, while Impact (2 samples, 0.004\%), Other (67 samples, 0.14\%), and Harmless (458 samples, 0.98\%) represent less than 1\% each. This extreme imbalance significantly impacts per-intent performance despite class-weighted training.
+
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\textwidth]{results/plots/section4/f1_by_intent.png}
-\caption{F1-Score by MITRE ATT\&CK intent category showing BERT performance across all 7 intents. Discovery (0.94) and Persistence (0.92) achieve highest scores. Execution (0.89) and Defense Evasion (0.81) show strong performance. Minority classes Harmless (0.62), Other (0.54), and Impact (0.48) benefit from transfer learning but remain challenging due to limited training samples (<1,000 each).}
-\label{fig:f1_by_intent}
-\end{figure}
-
-Precision-recall analysis (Appendix D.2) reveals balanced metrics for high-prevalence intents (Discovery, Persistence >0.90), while minority intents exhibit lower recall indicating missed detections. ROC analysis (Appendix D.3) demonstrates excellent discrimination capability with Discovery (AUC=0.97), Persistence (AUC=0.96), and micro-average AUC of 0.93. Comprehensive metrics comparison across all intents is provided in Appendix D.2.
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{results/plots/section4/sample_distribution.png}
-\caption{Test set sample distribution across 7 intent categories illustrating severe class imbalance. Discovery (3,600 samples) and Persistence (3,500) dominate dataset. Impact (95 samples, 1\%), Other (140 samples, 1.5\%), and Harmless (180 samples, 2\%) represent minority classes. 38:1 ratio between most and least frequent intents necessitates class-weighted loss function for effective training.}
+\includegraphics[width=0.7\textwidth]{results/plots/section4/sample_distribution.png}
+\caption{Test set distribution across 7 intent categories showing severe class imbalance.}
 \label{fig:sample_dist}
 \end{figure}
 
-\subsection{Per-Intent Performance Breakdown}
+\FloatBarrier
+\textbf{Per-Intent Performance Analysis:} Figure~\ref{fig:f1_by_intent} reveals the direct consequence of class imbalance on model performance. Majority classes achieve near-perfect F1-scores: Discovery (F1: 0.9999), Persistence (F1: 0.9995), Execution (F1: 0.991), and Defense Evasion (F1: 0.983). In contrast, minority classes show severe degradation: Impact fails completely (F1: 0.000) due to having only 2 training samples, while Harmless (F1: 0.336) demonstrates the challenge of distinguishing normal shell commands from malicious sessions. In contrast, Other (F1: 0.992) surprisingly achieves strong performance despite the few samples, suggesting high linguistic uniqueness from the sessions in this category. 
 
-BERT achieves near-perfect performance on majority intents: Discovery (F1=0.9999), Persistence (F1=0.9995), Other (F1=0.9925), Execution (F1=0.9910), and strong results on Defense Evasion (F1=0.9835). However, minority class challenges persist: Harmless (F1=0.3211, only 458 samples) shows low recall (0.2009), while Impact (F1=0.0000, only 2 samples) demonstrates extreme class imbalance limitations despite transfer learning.
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\textwidth]{results/plots/section4/f1_by_intent.png}
+\caption{F1-scores by intent showing excellent performance on majority classes but failure on most extreme minority classes.}
+\label{fig:f1_by_intent}
+\end{figure}
+
+
+The high micro F1-score (0.9959) reflects the model's strong performance on the abundant majority classes, while the significantly lower macro F1-score (0.7574) reveals the impact of minority class struggles. Despite sophisticated class weighting, the model cannot effectively learn from intents with fewer than 100 samples.
+
+ROC analysis and detailed precision-recall metrics by intent are provided in \hyperref[appendix:D2]{Appendix D.2}, demonstrating strong discrimination capability (AUC > 0.99) for well-represented classes while confirming the statistical impossibility of learning meaningful patterns from 2 training examples.
 
 \subsection{Comparison with Traditional ML Approaches}
 
-Table~\ref{tab:model_comparison} compares BERT with the best traditional ML model (tuned Logistic Regression):
+Table~\ref{tab:model_comparison} compares BERT with tuned Logistic Regression on the test set:
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
-\caption{BERT vs Traditional ML Performance Comparison}
+\caption{BERT vs tuned Logistic Regression}
 \label{tab:model_comparison}
 \begin{tabular}{@{}lccc@{}}
 \toprule
 \textbf{Metric} & \textbf{LR (tuned)} & \textbf{BERT} & \textbf{Improvement} \\
 \midrule
-Accuracy & 0.9843 & 0.9820 & -0.23\% \\
-F1 (Micro) & 0.9964 & 0.9960 & -0.04\% \\
-F1 (Macro) & 0.8463 & 0.7553 & -10.75\% \\
+Accuracy & 0.9843 & 0.9816 & -0.27\% \\
+F1 (Micro) & 0.9964 & 0.9959 & -0.05\% \\
+F1 (Macro) & 0.8463 & 0.7574 & -10.50\% \\
 Hamming Loss & 0.0157 & 0.0028 & -82.17\% \\
 \midrule
 \multicolumn{4}{l}{\textit{Per-Intent F1-Scores:}} \\
 Discovery & 1.000 & 0.9999 & -0.01\% \\
 Persistence & 1.000 & 0.9995 & -0.05\% \\
-Other & 0.990 & 0.9925 & +0.25\% \\
-Execution & 0.990 & 0.9910 & +0.10\% \\
+Execution & 0.990 & 0.9909 & +0.09\% \\
 Defense Evasion & 0.980 & 0.9835 & +0.36\% \\
-Harmless & 0.290 & 0.3211 & +10.72\% \\
+Other & 0.990 & 0.9925 & +0.25\% \\
+Harmless & 0.290 & 0.3355 & +15.69\% \\
 Impact & 0.670 & 0.0000 & -100.00\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Key findings from comparison:
-\begin{itemize}
-    \item \textbf{Traditional ML Superiority}: Logistic Regression outperforms BERT on Macro-F1 (0.8463 vs 0.7553), showing better minority class handling
-    \item \textbf{Micro-F1 Parity}: Both achieve similar Micro-F1 (~0.996), but LR excels on rare intents
-    \item \textbf{Hamming Loss}: BERT achieves superior Hamming Loss (0.0028 vs 0.0157), indicating fewer per-label errors
-    \item \textbf{Majority Intent Performance}: BERT achieves near-perfect F1 on high-frequency intents (Discovery: 0.9999, Persistence: 0.9995, Execution: 0.9910)
-    \item \textbf{Minority Class Handling}: LR outperforms BERT on rare intents, especially Impact (0.67 vs 0.00) due to better class weight optimization
-    \item \textbf{Contextual Understanding}: BERT captures sequential patterns but LR's probabilistic framework with class weights proves more effective for imbalanced data
-\end{itemize}
 
-\subsection{Class Imbalance Impact}
+Despite BERT's architectural sophistication, Logistic Regression demonstrates superior overall performance, particularly on macro F1-score (0.8463 vs 0.7574), indicating better minority class handling. The key advantage of LR lies in its effective class weight optimization, achieving 0.67 F1 on Impact (only 2 test samples) while BERT completely fails (0.00). Both models achieve near-identical performance on majority classes, with micro F1-scores above 0.995.
 
-The sample distribution (Figure~\ref{fig:sample_dist}) shows severe class imbalance:
-\begin{itemize}
-    \item Discovery: ~18,000 samples
-    \item Persistence: ~17,500 samples
-    \item Execution: ~10,000 samples
-    \item Defense Evasion: ~2,000 samples
-    \item Harmless, Other, Impact: $<$ 500 samples each
-\end{itemize}
+BERT's primary advantage appears in Hamming Loss (0.0028 vs 0.0157), suggesting fewer per-label errors in the multi-label setting. However, this marginal benefit does not compensate for the 10.5\% degradation in macro F1-score and significant computational overhead. For this extremely imbalanced dataset, traditional ML with proper class weighting proves more effective than transfer learning from pre-trained language models.
 
-Mitigation strategies employed:
-\begin{itemize}
-    \item \textbf{Class Weights}: Inverse frequency weighting in loss function
-    \item \textbf{Transfer Learning}: Pre-trained BERT provides robust representations even for rare classes
-    \item \textbf{Data Augmentation}: Future work could explore back-translation or synonym replacement
-\end{itemize}
+\subsection{Discussion and Model Selection}
 
-\subsection{Discussion}
 
-\textbf{Performance Comparison:} Logistic Regression achieves marginally higher test accuracy (98.43% vs 98.20%) and superior Macro-F1 (0.8463 vs 0.7553). However, BERT demonstrates exceptional Hamming Loss (0.0028 vs 0.0157), indicating fewer multi-label errors. This suggests that while LR better handles minority classes, BERT excels at avoiding label-specific errors on majority classes.
+\textbf{Why Traditional ML Wins:} The strong performance of Logistic Regression with TF-IDF features (macro F1: 0.8463) demonstrates that SSH attack patterns are effectively captured by term frequency representations. Discriminative commands such as "wget", "chmod", and "crontab" combined with L2 regularization and class weighting provide excellent classification performance. The probabilistic framework of logistic regression handles extreme class imbalance (e.g., Impact with 2 samples) more effectively than BERT's neural architecture.
 
-\textbf{TF-IDF Effectiveness:} The strong performance of Logistic Regression with TF-IDF vectors (Macro-F1: 0.8463) indicates that command-based attack patterns are well-represented by term frequency features. The discriminative power of specific commands (e.g., "wget", "chmod", "crontab") combined with L2 regularization and class weight optimization provides excellent classification performance.
+\textbf{Computational Trade-offs:} Training time differs dramatically: BERT requires 5-6 hours on GPU compared to LR's 2 minutes on CPU. Similarly, inference latency shows BERT at 32ms per session versus LR at <1ms. Given LR's superior macro F1-score, computational efficiency, and better minority class handling, it represents the optimal choice for production deployment.
 
-\textbf{Minority Class Performance:} Logistic Regression significantly outperforms BERT on Impact (0.67 vs 0.00), demonstrating that class weight optimization in a probabilistic framework handles extreme imbalance (only 2 test samples) more effectively than BERT's transfer learning approach. However, BERT excels on Other class (0.9925 vs 0.00).
-
-\textbf{Computational Trade-offs:} Training time: BERT (2-3 hours on GPU) vs LR (2 minutes on CPU). Inference: BERT (32ms/session) vs LR (<1ms/session). Given LR's superior Macro-F1, efficiency, and better minority class handling, it is the recommended approach for production deployment.
-
-\textbf{When BERT May Excel:} Future datasets with more complex sequential dependencies, natural language descriptions, or novel attack patterns might favor BERT's contextual understanding. For this command-focused dataset, however, traditional ML proves optimal.
+\textbf{When BERT Might Excel:} Future datasets with more complex sequential dependencies, natural language descriptions of attacks, or novel attack patterns not well-represented by individual command frequencies might favor BERT's contextual understanding. For this command-focused dataset with clear discriminative features, however, traditional ML proves superior.
 
 % ============================================
 % SECTION 6: CONCLUSIONS AND FUTURE WORK
@@ -697,157 +729,117 @@ Mitigation strategies employed:
 
 \subsection{Summary of Findings}
 
-This research presented a comprehensive machine learning approach to analyzing SSH shell attack sessions using the MITRE ATT\&CK framework. Our key findings across all four analysis sections are:
+This research presented a comprehensive machine learning approach to analyzing SSH shell attack sessions using the MITRE ATT\&CK framework for multi-label intent classification.
 
-\paragraph{Data Exploration and Preprocessing} revealed:
+\paragraph{Supervised Learning Classification} demonstrated that traditional ML approaches excel on this task:
 \begin{itemize}
-    \item Dataset of 233,035 attack sessions spanning June 2019 to February 2020
-    \item Discovery and Persistence as dominant intents (~200,000 occurrences each)
-    \item Strong co-occurrence patterns between Discovery and Persistence
-    \item Bimodal session length distribution indicating automated vs. manual attacks
-    \item TF-IDF representation reducing features from 300,000 to 90 most informative tokens
+    \item Tuned Logistic Regression achieved best overall performance: 98.43\% accuracy, 0.8463 macro F1-score
+    \item TF-IDF feature representation effectively captured discriminative attack patterns
+    \item Outstanding performance on common intents (Discovery, Persistence, Execution) with F1 scores >0.99
+    \item Persistent challenges with extreme minority classes (Impact: 2 samples, Harmless: 458 samples)
 \end{itemize}
 
-\paragraph{Supervised Learning Classification} demonstrated:
+\paragraph{Unsupervised Learning Clustering} uncovered fine-grained attack patterns:
 \begin{itemize}
-    \item Logistic Regression (tuned) achieving best overall performance: 98.43\% accuracy and 0.9964 F1-micro score
-    \item SVM providing comparable performance (98.35\% accuracy, 0.9963 F1-micro) with strong generalization
-    \item Outstanding performance on common intents (Discovery, Persistence, Execution) with F1 scores 0.99-1.00
-    \item Challenges with rare intents: Harmless F1=0.29, Impact F1=0.67 due to extreme class imbalance
-    \item Feature importance analysis identifying key command predictors for each intent
+    \item Optimal clustering at k=10 with high algorithm agreement (ARI=0.82, NMI=0.84)
+    \item Weighted average cluster purity of 97.75\% indicating highly homogeneous groupings
+    \item Six distinct attack categories aligned with MITRE ATT\&CK intents
+    \item Revealed co-occurrence patterns between Discovery and Persistence intents
 \end{itemize}
 
-\paragraph{Unsupervised Learning Clustering} uncovered:
+\paragraph{BERT Language Model} showed strong but not superior performance:
 \begin{itemize}
-    \item Optimal clustering at k=10 based on multiple evaluation metrics
-    \item High algorithm agreement with ARI = 0.8192 and NMI = 0.8385
-    \item Weighted average cluster purity of 0.9775 indicating highly homogeneous groupings
-    \item Distinct fine-grained attack categories (Reconnaissance, Botnet Recruitment, Cryptomining, Backdoor Installation, Multi-Stage Attacks)
-    \item Strong alignment between clusters and MITRE ATT\&CK intents
-\end{itemize}
-
-\paragraph{BERT Language Model} achieved:
-\begin{itemize}
-    \item Strong overall performance: 98.20\% accuracy and 0.9960 F1-micro score
-    \item Competitive with traditional ML (LR tuned: 98.43\% accuracy, 0.9964 F1-micro)
-    \item Demonstrates transfer learning capabilities with pre-trained language representations
-    \item Superior contextual understanding through bidirectional transformer architecture
-    \item Exceptional performance on majority classes: Discovery F1=0.9999, Other F1=0.9925
-    \item Critical failure on Impact class (F1=0.00) due to only 2 test samples
+    \item Competitive overall metrics: 98.16\% accuracy, 0.7574 macro F1-score
+    \item Near-perfect performance on majority classes (Discovery: 0.9999, Persistence: 0.9995)
+    \item Complete failure on Impact class (F1=0.00) despite class weighting
+    \item Superior Hamming Loss (0.0028 vs 0.0157) indicating fewer per-label errors
+    \item Computational overhead (5-6 hours training, 32ms inference) limits practical deployment
 \end{itemize}
 
 \subsection{Best Performing Approach}
 
-The \textbf{tuned Logistic Regression model} emerged as the superior approach for SSH attack intent classification:
+The \textbf{tuned Logistic Regression model} emerged as the optimal approach for production deployment:
 
 \begin{itemize}
-    \item \textbf{Overall Performance}: Highest test accuracy (98.43\%) and tied F1-micro (0.9964) with SVM
-    \item \textbf{Balanced Performance}: Best Macro F1 (0.8463) demonstrating superior handling of minority classes
-    \item \textbf{Minority Class Handling}: Outperforms SVM on challenging intents with better class weight optimization
-    \item \textbf{Generalization}: Minimal overfitting gap (train 0.9975 vs test 0.9964)
-    \item \textbf{Practical Deployment}: Fastest inference (<1ms per session) suitable for real-time threat detection
+    \item \textbf{Superior Macro F1}: 0.8463 vs BERT's 0.7574, demonstrating better minority class handling
+    \item \textbf{Computational Efficiency}: <1ms inference vs BERT's 32ms, 2-minute training vs 5-6 hours
+    \item \textbf{Better Generalization}: Minimal overfitting with consistent train/test performance
     \item \textbf{Interpretability}: Feature coefficients provide actionable insights for security analysts
+    \item \textbf{Deployment Simplicity}: Small model size (<5MB) suitable for edge deployment
 \end{itemize}
 
-However, BERT remains valuable for:
-\begin{itemize}
-    \item Exceptional performance on majority classes (Discovery: 0.9999, Other: 0.9925)
-    \item Research on contextual understanding of attack patterns
-    \item Transfer learning to related security domains
-    \item Scenarios where sequential command dependencies are critical
-\end{itemize}
-
-SVM also provides competitive performance:
-\begin{itemize}
-    \item Strong accuracy (98.35\%) with robust margin-based classification
-    \item Comparable F1-micro (0.9963) to Logistic Regression
-    \item Effective handling of high-dimensional sparse TF-IDF features
-    \item Alternative choice when non-linear decision boundaries are suspected
-\end{itemize}
+This demonstrates that for command-based attack logs with clear discriminative features, carefully tuned traditional ML with proper class weighting outperforms sophisticated neural architectures.
 
 \subsection{Limitations}
 
-Several limitations were identified during this research:
-
-\paragraph{Class Imbalance} remains a significant challenge:
+\paragraph{Class Imbalance} remains the dominant challenge:
 \begin{itemize}
-    \item Rare intents (Impact, Harmless, Other) have fewer than 500 training examples
-    \item Even BERT struggles with extreme imbalance ratios (400:1)
-    \item Limited real-world examples of certain attack types
+    \item Extreme imbalance ratios (Impact: 2 samples, Discovery: 46,433 samples = 23,000:1 ratio)
+    \item Both traditional ML and BERT struggle with <100 training examples per class
+    \item Class weighting provides partial mitigation but cannot overcome statistical insufficiency
 \end{itemize}
 
 \paragraph{Dataset Characteristics}:
 \begin{itemize}
     \item Honeypot data may not represent all real-world attack scenarios
-    \item Temporal coverage (9 months) might miss seasonal attack patterns
-    \item Potential bias toward automated attack tools
+    \item Temporal coverage (June 2019-February 2020) might miss evolving attack patterns
+    \item Multi-label complexity (average 2-3 intents per session) increases classification difficulty
 \end{itemize}
 
-\paragraph{Multi-Label Complexity}:
+\paragraph{Model Selection Trade-offs}:
 \begin{itemize}
-    \item Average 2-3 intents per session increases classification difficulty
-    \item Intent dependencies not explicitly modeled
-    \item Unclear boundaries between some MITRE ATT\&CK categories
-\end{itemize}
-
-\paragraph{Computational Requirements}:
-\begin{itemize}
-    \item BERT fine-tuning requires GPU acceleration
-    \item Inference time higher than traditional ML (32ms vs. 5ms per session)
-    \item Model size (110MB) larger than Logistic Regression (<5MB)
+    \item BERT's contextual understanding underutilized for command-based logs
+    \item Computational requirements limit BERT's real-time deployment feasibility
+    \item Intent dependencies not explicitly modeled in current approaches
 \end{itemize}
 
 \subsection{Future Research Directions}
 
-Several promising directions for future work:
-
-\paragraph{Advanced Modeling Techniques}:
+\paragraph{Addressing Class Imbalance}:
 \begin{itemize}
-    \item \textbf{Label Dependency Modeling}: Implement chain classifiers to capture intent co-occurrence patterns
-    \item \textbf{Ensemble Methods}: Combine BERT with traditional ML for optimal performance-efficiency balance
-    \item \textbf{Few-Shot Learning}: Leverage meta-learning for rare intent classification
+    \item \textbf{Synthetic Data Generation}: Create realistic rare attack samples using rule-based systems and command templates
+    \item \textbf{Few-Shot Learning}: Leverage meta-learning techniques to improve performance with limited examples
+    \item \textbf{Active Learning}: Prioritize labeling of uncertain or rare attack patterns from new honeypot data
 \end{itemize}
 
-\paragraph{Data Augmentation and Domain Adaptation}:
+\paragraph{Advanced Modeling}:
 \begin{itemize}
-    \item Synthetic attack generation using rule-based systems
-    \item Pre-train BERT on larger corpus of security logs
-    \item Active learning to prioritize labeling of uncertain samples
+    \item \textbf{Label Dependency Modeling}: Implement classifier chains to explicitly model intent co-occurrence
+    \item \textbf{Ensemble Methods}: Combine BERT's contextual understanding with LR's efficiency
+    \item \textbf{Domain-Specific Pre-training}: Train language models specifically on security logs and attack datasets
 \end{itemize}
 
-\paragraph{Explainability and Deployment}:
+\paragraph{Deployment and Explainability}:
 \begin{itemize}
-    \item Implement attention visualization and SHAP analysis for interpretable predictions
-    \item Real-time streaming classification pipeline
-    \item Integration with SIEM systems and threat intelligence platforms
-    \item Temporal pattern analysis to predict attack evolution
+    \item Real-time streaming classification pipeline integrated with SIEM systems
+    \item Attention visualization and SHAP analysis for interpretable predictions
+    \item Temporal pattern analysis to detect evolving attack campaigns
+    \item Automated threat intelligence generation from classified sessions
 \end{itemize}
 
-\subsection{Practical Implications for Cybersecurity}
+\subsection{Practical Impact}
 
-This research has several practical implications:
+This research provides actionable capabilities for cybersecurity operations:
 
 \begin{enumerate}
-    \item \textbf{Automated Threat Detection}: Models enable automatic classification of thousands of attack sessions, potentially reducing manual analyst workload significantly
+    \item \textbf{Automated Threat Analysis}: Classification of thousands of attack sessions with 98\%+ accuracy reduces manual analyst workload
     
-    \item \textbf{Early Warning System}: Clustering analysis identifies emerging attack patterns, providing early warning of new threat campaigns
+    \item \textbf{Attack Pattern Discovery}: Clustering reveals six distinct attack categories, enabling early detection of emerging threats
     
-    \item \textbf{Incident Response Prioritization}: Intent classification allows prioritization of high-impact attacks (Impact, Persistence) over reconnaissance
+    \item \textbf{Incident Prioritization}: Intent classification allows focus on high-impact attacks (Persistence, Impact) over reconnaissance
     
-    \item \textbf{Threat Intelligence}: Fine-grained attack categories support IOC (Indicator of Compromise) generation and threat intelligence sharing
-    
-    \item \textbf{Security Training}: Identified attack patterns inform defensive training and awareness programs
-    
-    \item \textbf{Honeypot Optimization}: Understanding attack patterns enables better honeypot configuration to attract diverse threats
+    \item \textbf{Threat Intelligence Sharing}: Fine-grained categorization supports IOC generation aligned with MITRE ATT\&CK framework
 \end{enumerate}
 
 \subsection{Concluding Remarks}
 
-This research demonstrates that machine learning techniques, particularly ensemble methods with well-engineered TF-IDF features, can effectively analyze and classify SSH shell attacks with exceptional accuracy. The combination of supervised learning, unsupervised clustering, and language models provides a comprehensive framework for understanding attacker tactics and improving cybersecurity defenses.
+This research demonstrates that traditional machine learning with carefully engineered TF-IDF features remains highly competitive with modern deep learning approaches for SSH attack classification. The tuned Logistic Regression model achieves 98.43\% accuracy and 0.8463 macro F1-score, outperforming BERT (98.16\% accuracy, 0.7574 macro F1-score) while providing superior computational efficiency and interpretability.
 
-The tuned Logistic Regression approach achieves outstanding performance (98.43\% accuracy, 0.9964 F1-micro, 0.8463 F1-macro), demonstrating that traditional ML methods with careful feature engineering and class weight optimization remain highly competitive. Clustering analysis with 97.75\% purity reveals six distinct attack categories aligned with MITRE ATT\&CK intents, providing actionable insights for security professionals. While BERT shows promise with near-perfect performance on majority classes and exceptional Hamming Loss (0.0028), its failure on extremely rare classes and computational overhead don't justify deployment over LR for this specific task.
+The key insight is that \textbf{class imbalance}, not model architecture, \textbf{ is the limiting factor} for this task. Both traditional ML and BERT fail on extreme minority classes with fewer than 100 samples. Addressing this through synthetic data generation, few-shot learning, or active labeling represents the most promising direction for improvement.
 
-As cyber threats continue to evolve, automated log analysis systems leveraging these techniques will become increasingly critical for maintaining robust security postures. Future work should focus on addressing class imbalance, improving model explainability, and deploying these systems in real-world security operations centers.
+Unsupervised clustering with 97.75\% purity successfully identifies six distinct attack categories, demonstrating strong alignment with MITRE ATT\&CK intents. This combined supervised-unsupervised approach provides a comprehensive framework for automated threat analysis in security operations.
+
+As cyber threats evolve, machine learning-powered log analysis will become increasingly critical. This research provides a practical foundation for deploying accurate, efficient, and interpretable attack classification systems in real-world security contexts.
 
 % ============================================
 % REFERENCES
@@ -901,57 +893,44 @@ Min Du et al.
 % ============================================================
 \appendix
 \clearpage
-
 %% ============================================================
-%% APPENDIX A: SUPPLEMENTARY DATA EXPLORATION
+%% APPENDIX A: EXTENDED DATA EXPLORATION ANALYSIS
 %% ============================================================
-\section{Supplementary Data Exploration Results}
+\section{Extended Data Exploration Analysis}
 \addcontentsline{toc}{section}{Appendix A: Supplementary Data Exploration Results}
 
-This appendix provides additional visualizations from the data exploration phase
-that support but are not essential to the main analysis.
-
 \subsection{Session Characteristics}
+\label{appendix:A1}
 \addcontentsline{toc}{subsection}{A.1 Session Characteristics}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{results/plots/section1/char_word_distributions.png}
-  \caption{Distribution of character and word counts in attack sessions showing high variability. 
-  Left: Character count distribution ranges from 50 (simple probes) to 10,000+ (sophisticated 
-  multi-command attacks), with median of 620 characters. Right: Word count distribution (median 116 words) peaks 
-  at 20-50 words per session, with long tail extending to 500+ words indicating script-based 
-  automated attacks.}
+  \includegraphics[width=1.0\textwidth]{results/plots/section1/char_word_distributions.png}
+  \caption{Distribution of character counts (left) and word counts (right) per session. Character distribution: mean 1,014, median 620. Word distribution: mean 121, median 116. Long tails indicate complex multi-stage attacks with extensive command sequences.}
   \label{fig:char_word_dist_appendix}
 \end{figure}
 
 \subsection{Vocabulary Analysis}
+\label{appendix:A2}
 \addcontentsline{toc}{subsection}{A.2 Vocabulary Analysis}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section1/top_tokens.png}
-  \caption{Top 20 most common tokens in attack sessions with frequency counts. Navigation 
-  commands ('cd': 45K, 'ls': 38K) appear most frequently, followed by download tools 
-  ('wget': 32K, 'curl': 28K) and permission modification ('chmod': 25K). High prevalence 
-  of 'bin', 'tmp', and 'dev' indicates standard attack patterns targeting writable directories.}
+  \includegraphics[width=1.0\textwidth]{results/plots/section1/top_tokens.png}
+  \caption{Top 20 tokens: Recon-focused (grep ~1.2e6 occurrences), indicating system probing.}
   \label{fig:top_tokens_appendix}
 \end{figure}
 
 \subsection{Temporal Intent Evolution}
+\label{appendix:A3}
 \addcontentsline{toc}{subsection}{A.3 Temporal Intent Evolution}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{results/plots/section1/intent_over_time.png}
-  \caption{Evolution of attack intents over 9-month period (June 2019 - February 2020). 
-  Discovery and Persistence maintain constant prevalence indicating continuous reconnaissance. 
-  Sharp increase in Execution and Impact intents during December 2019 correlates with 
-  heightened attack sophistication. Defense Evasion shows gradual upward trend, suggesting 
-  attacker adaptation to detection mechanisms.}
+  \includegraphics[width=1.0\textwidth]{results/plots/section1/intent_over_time.png}
+  \caption{Intent trends: Discovery/Persistence steady; Execution/Impact peak December 2019.}
   \label{fig:intent_time_appendix}
 \end{figure}
-
 
 %% ============================================================
 %% APPENDIX B: EXTENDED SUPERVISED LEARNING RESULTS
@@ -959,175 +938,195 @@ that support but are not essential to the main analysis.
 \section{Extended Supervised Learning Results}
 \addcontentsline{toc}{section}{Appendix B: Extended Supervised Learning Results}
 
-This appendix contains supplementary supervised learning analysis that complements
-the main classification results.
-
 \subsection{Feature Importance Analysis}
+\label{appendix:B1}
 \addcontentsline{toc}{subsection}{B.1 Feature Importance Analysis}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section2/top_predictive_tokens.png}
-  \caption{Top predictive tokens for multi-label intent classification across 7 intents. 
-  Persistence indicators ('crontab', 'systemctl', 'service') show highest feature importance. 
-  Discovery markers ('uname', 'whoami', 'ifconfig') and Execution signals ('bash', 'python', 
-  'perl') demonstrate clear intent-command associations. TF-IDF weighting successfully identifies 
-  discriminative features despite vocabulary overlap.}
+  \includegraphics[width=0.8\textwidth]{results/plots/section2/top_predictive_tokens.png}
+  \caption{Top predictive tokens (tuned LR): Encoded paths and admin/passwd dominate, signaling persistence/evasion tactics amid command noise.}
   \label{fig:top_predictive_appendix}
 \end{figure}
 
-
+\clearpage
 %% ============================================================
 %% APPENDIX C: EXTENDED CLUSTERING ANALYSIS
 %% ============================================================
 \section{Extended Clustering Analysis}
 \addcontentsline{toc}{section}{Appendix C: Extended Clustering Analysis}
 
-This appendix contains supplementary clustering visualizations and validation metrics
-that complement the main unsupervised learning analysis.
+This appendix contains supplementary clustering visualizations and validation metrics that complement the main unsupervised learning analysis.
 
-\subsection{Cluster Visualizations}
-\addcontentsline{toc}{subsection}{C.1 Cluster Visualizations}
+\subsection{Dimensionality Reduction Visualizations}
+\label{appendix:C1}
+\addcontentsline{toc}{subsection}{C.1 Dimensionality Reduction Visualizations}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section3/kmeans_clusters_visualization.png}
-  \caption{K-Means cluster visualization using dimensionality reduction (t-SNE/PCA). Ten 
-  distinct clusters show reasonable separation in 2D projection. Cluster 3 (reconnaissance-focused) 
-  and Cluster 5 (persistence-heavy) exhibit tight grouping, while hybrid attack clusters (7, 8) 
-  show some overlap, reflecting diverse multi-tactic sessions.}
-  \label{fig:kmeans_viz_appendix}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{results/plots/section3/kmeans_clusters_visualization.png}
+\caption{K-Means cluster visualization using t-SNE (left) and UMAP (right) dimensionality reduction. Both projections reveal reasonable cluster separation with expected overlap between related attack types. The largest cluster (gray, likely Cluster 1 with 84,047 sessions) dominates the center, while smaller specialized clusters (colored) form distinct periphery regions.}
+\label{fig:cluster_visualization_appendix}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{results/plots/section3/hierarchical_dendrogram.png}
-  \caption{Hierarchical clustering dendrogram using Ward linkage. Dendrogram height suggests 
-  natural groupings at different granularity levels. Major branches separate simple reconnaissance 
-  scripts (left) from complex multi-stage attacks involving persistence mechanisms (right). 
-  Optimal cut at 10 clusters aligns with K-Means analysis.}
-  \label{fig:hierarchical_dend_appendix}
-\end{figure}
-
+\FloatBarrier
 \subsection{Clustering Algorithm Comparison}
+\label{appendix:C2}
 \addcontentsline{toc}{subsection}{C.2 Clustering Algorithm Comparison}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section3/algorithm_comparison.png}
-  \caption{Comparison of Agglomerative Hierarchical vs K-Means clustering results across 
-  multiple metrics. Both algorithms show peak performance at k=10 clusters. Silhouette scores 
-  (0.42 K-Means, 0.39 Agglomerative) indicate reasonable cluster quality. Davies-Bouldin index 
-  favors K-Means (lower is better), while Calinski-Harabasz shows comparable performance. High 
-  cluster assignment agreement (ARI = 0.8192, NMI = 0.8385) validates consistency across algorithms.}
-  \label{fig:algorithm_comp_appendix}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{results/plots/section3/algorithm_comparison.png}
+\caption{Algorithm comparison using UMAP projection. Left: Agglomerative Hierarchical clustering with Ward linkage. Right: K-Means clustering. High visual similarity and quantitative agreement (ARI=0.8192, NMI=0.8385) validate consistent pattern discovery across algorithmic approaches.}
+\label{fig:algorithm_comparison_appendix}
 \end{figure}
 
-\subsection{Cluster Word Clouds}
-\addcontentsline{toc}{subsection}{C.3 Cluster Word Clouds}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{results/plots/section3/cluster_wordclouds.png}
-  \caption{Word clouds for representative clusters showing characteristic command tokens. 
-  Cluster 0 (Discovery): 'uname', 'whoami', 'ifconfig' dominate. Cluster 1 (Botnet): 'wget', 
-  'curl', '/tmp/' prevalent. Cluster 2 (Cryptomining): 'xmrig', 'minerd' visible. Cluster 3 
-  (Persistence): 'crontab', 'systemctl', '.bashrc' emphasized. Word frequency proportional to 
-  font size, revealing cluster-specific attack signatures.}
-  \label{fig:cluster_wordclouds_appendix}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{results/plots/section3/hierarchical_dendrogram.png}
+\caption{Hierarchical clustering dendrogram using Ward linkage on 2,000 sample subset. The suggested cut at distance $\approx$ 50 yields 8-12 clusters, consistent with K-Means optimal k=10. Large distance jumps at the top indicate well-separated major cluster groups.}
+\label{fig:hierarchical_dendrogram_appendix}
 \end{figure}
 
-\subsection{Cluster-Intent Relationship Analysis}
-\addcontentsline{toc}{subsection}{C.4 Cluster-Intent Relationship Analysis}
+\FloatBarrier
+\subsection{Complete Cluster Profiles}
+\label{appendix:C3}
+\addcontentsline{toc}{subsection}{C.3 Complete Cluster Profiles}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section3/intent_composition_stacked.png}
-  \caption{Intent composition per cluster (stacked bar chart) showing proportion of MITRE 
-  ATT\&CK intents within each cluster. Cluster 0 predominantly Discovery (>80\%), Cluster 3 
-  heavily Persistence-focused (>70\%), while Clusters 5-9 show balanced multi-intent distributions. 
-  Discovery and Persistence intents appear across most clusters, confirming their prevalence.}
-  \label{fig:intent_stacked_appendix}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{results/plots/section3/all_cluster_wordclouds.png}
+\caption{Complete word cloud visualization for all 10 clusters. Font size indicates term frequency within each cluster. Session counts shown in parentheses.}
+\label{fig:all_cluster_wordclouds}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section3/cluster_intent_heatmap.png}
-  \caption{Cluster-intent association heatmap showing correlation patterns between 10 clusters 
-  (rows) and 7 intents (columns). Dark cells indicate strong associations. Diagonal-like pattern 
-  visible: Cluster 0-Discovery (0.92), Cluster 3-Persistence (0.87). Off-diagonal associations 
-  reveal multi-intent attack patterns. Clustering successfully separates single-intent from 
-  hybrid attacks, validating unsupervised approach.}
-  \label{fig:cluster_heatmap_appendix}
+\begin{table}[htbp]
+\centering
+\caption{Statistical profiles for all 10 clusters, including dominant intent, purity, and session counts.}
+\label{tab:cluster_profiles}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cluster ID} & \textbf{Dominant Intent} & \textbf{Purity (\%)} & \textbf{Sessions} \\
+\midrule
+0 & Persistence        & 87.5  & 8        \\
+1 & Execution          & 99.4  & 84,047   \\
+2 & Defense Evasion    & 99.3  & 17,574   \\
+3 & Execution          & 77.1  & 2,035    \\
+4 & Persistence        & 97.0  & 404      \\
+5 & Persistence        & 98.8  & 1,258    \\
+6 & Persistence        & 99.5  & 422      \\
+7 & Persistence        & 96.6  & 121,142  \\
+8 & Execution          & 97.7  & 688      \\
+9 & Execution          & 100.0 & 5,457    \\
+\midrule
+\multicolumn{2}{l}{\textbf{Weighted Average Purity}} & \textbf{97.75} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\FloatBarrier
+\subsection{Intent Composition by Cluster}
+\label{appendix:C4}
+\addcontentsline{toc}{subsection}{C.4 Intent Composition by Cluster}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{results/plots/section3/intent_composition_stacked.png}
+\caption{Intent composition per cluster showing percentage contribution of each MITRE ATT\&CK intent. Discovery (orange) and Persistence (cyan) dominate most clusters, with Execution (red) and Defense Evasion (blue) appearing in multi-tactic clusters. Stacked percentages exceed 100\% due to multi-label annotation.}
+\label{fig:intent_composition_stacked}
 \end{figure}
 
-
+\FloatBarrier
+\clearpage
 %% ============================================================
-%% APPENDIX D: BERT TRAINING DETAILS
+%% APPENDIX D: BERT DETAILS
 %% ============================================================
-\section{BERT Training and Evaluation Details}
-\addcontentsline{toc}{section}{Appendix D: BERT Training and Evaluation Details}
+\section{Extended BERT Analysis}
+\addcontentsline{toc}{section}{Appendix D: Extended BERT Analysis}
 
-This appendix reports supplementary BERT training dynamics and evaluation metrics
-that provide additional context beyond the main results.
+This appendix presents the full set of training, evaluation, and test details for the BERT model, offering additional context beyond the main results.
 
-\subsection{Loss Function Comparison}
-\addcontentsline{toc}{subsection}{D.1 Loss Function Comparison}
+\subsection{Additional Training Visualizations}
+\label{appendix:D1}
+\addcontentsline{toc}{subsection}{D.1 Additional Training Visualizations}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section4/loss_comparison.png}
-  \caption{Comparison of loss functions for multi-label classification. Binary Cross-Entropy 
-  with class weighting (blue) outperforms standard BCE (orange) and Focal Loss (green) on 
-  validation set. Class-weighted BCE achieves lowest final loss (0.18) and fastest convergence, 
-  effectively handling class imbalance. Focal Loss shows instability in early epochs despite 
-  theoretical advantages for hard examples.}
-  \label{fig:loss_comp_appendix}
+%DELETED - Useless details
+% \begin{figure}[htbp]
+%   \centering
+%   \includegraphics[width=0.7\textwidth]{results/plots/section4/loss_comparison.png}
+%   \caption{Comparison of loss functions for multi-label classification.}
+%   \label{fig:loss_comp_appendix}
+% \end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.55\textwidth]{results/plots/section4/accuracy_curve.png}
+\caption{Training and validation accuracy over 3 epochs, showing consistent improvement and early convergence.}
+\label{fig:accuracy_curves}
 \end{figure}
 
-\subsection{Precision-Recall Analysis}
-\addcontentsline{toc}{subsection}{D.2 Precision-Recall Analysis}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\textwidth]{results/plots/section4/precision_recall_comparison.png}
-  \caption{Precision vs Recall comparison across intents revealing performance trade-offs. 
-  High-prevalence intents (Discovery, Persistence) achieve balanced precision-recall (>0.90). 
-  Defense Evasion shows precision-recall gap (0.85 vs 0.77), indicating conservative prediction 
-  threshold. Minority intents exhibit lower recall, suggesting missed detections despite 
-  reasonable precision.}
-  \label{fig:precision_recall_appendix}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{results/plots/section4/overfitting_indicator.png}
+\caption{Overfitting indicator showing the gap between validation and training loss converging to near zero, demonstrating the model's consistent generalization capability}
+\label{fig:overfitting}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section4/metrics_comparison.png}
-  \caption{Comprehensive metrics comparison across all intent categories including precision, 
-  recall, F1-score, and support. Consistent patterns visible: high-frequency intents achieve 
-  balanced metrics, while minority intents show precision-recall trade-offs. Discovery and 
-  Persistence exceed 0.90 on all metrics. Impact intent shows lowest F1 (0.48) despite moderate 
-  precision (0.62), indicating difficulty in recall.}
-  \label{fig:metrics_comp_appendix}
+\FloatBarrier
+
+\subsection{Detailed Performance Metrics by Intent}
+\label{appendix:D2}
+\addcontentsline{toc}{subsection}{D.2 Detailed Performance Metrics by Intent}
+
+Table~\ref{tab:detailed_metrics} provides comprehensive per-intent metrics, while Figures~\ref{fig:metrics_comp}, \ref{fig:precision_recall}, and \ref{fig:roc_curve} show detailed visualizations of model performance across all intent categories.
+
+\begin{table}[h]
+\centering
+\caption{Detailed performance metrics by intent (from test set)}
+\label{tab:detailed_metrics}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+\textbf{Intent} & \textbf{Samples} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{\%} \\
+\midrule
+Persistence   & 42,281 & 0.9994 & 0.9996 & 0.9995 & 90.72\% \\
+Discovery     & 46,433 & 1.0000 & 0.9998 & 0.9999 & 99.63\% \\
+Defense Evasion & 3,760 & 0.9935 & 0.9737 & 0.9835 & 8.07\% \\
+Execution     & 18,512 & 0.9933 & 0.9888 & 0.9909 & 39.72\% \\
+Impact        & 2      & 0.0000 & 0.0000 & 0.0000 & 0.004\% \\
+Other         & 67     & 1.0000 & 0.9851 & 0.9925 & 0.14\% \\
+Harmless      & 458    & 0.6800 & 0.2227 & 0.3355 & 0.98\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{results/plots/section4/metrics_comparison.png}
+\caption{Precision, recall, and F1-score comparison across all intent categories.}
+\label{fig:metrics_comp}
 \end{figure}
 
-\subsection{ROC Analysis}
-\addcontentsline{toc}{subsection}{D.3 ROC Analysis}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{results/plots/section4/precision_recall_comparison.png}
+\caption{Precision vs recall showing trade-offs for each intent. Harmless shows high precision (0.68) but very low recall (0.22), indicating conservative predictions.}
+\label{fig:precision_recall}
+\end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{results/plots/section4/roc_curve_final.png}
-  \caption{ROC curves for each intent class demonstrating BERT discrimination capability. 
-  Discovery (AUC=0.97), Persistence (AUC=0.96), and Execution (AUC=0.94) show excellent 
-  discrimination. Defense Evasion (AUC=0.89) and minority classes (AUC 0.82-0.87) indicate 
-  room for improvement but substantially better than random (AUC=0.5). Micro-average AUC of 
-  0.93 confirms strong overall performance.}
-  \label{fig:roc_curve_appendix}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{results/plots/section4/roc_curve_final.png}
+\caption{Multi-class ROC curves showing excellent discrimination for all intents including Harmless (AUC: 0.958), demonstrating that the model learns meaningful features even when decision thresholds are suboptimal due to extreme imbalance.}
+\label{fig:roc_curve}
 \end{figure}
 
 
 %% ============================================================
 %% APPENDIX E: IMPLEMENTATION AND REPRODUCIBILITY
 %% ============================================================
+\FloatBarrier
 \section{Implementation and Reproducibility Notes}
 \addcontentsline{toc}{section}{Appendix E: Implementation and Reproducibility Notes}
 
@@ -1157,7 +1156,7 @@ experiments reported in the main document.
   \item \textbf{SVM}: C=1.0, kernel='linear', class\_weight='balanced'
   \item \textbf{K-Means}: k=10, init='k-means++', n\_init=10, random\_state=42
   \item \textbf{Hierarchical}: n\_clusters=10, linkage='ward', affinity='euclidean'
-  \item \textbf{BERT}: bert-base-uncased, lr=2e-5, batch\_size=32, epochs=3, max\_length=128
+  \item \textbf{BERT}: bert-base-uncased, lr=2e-5, batch\_size=32, epochs=3, max\_length=256
 \end{itemize}
 
 \end{document}
